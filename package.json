@@ -6,9 +6,11 @@
   "private": true,
   "scripts": {
     "start": "node tools/serve.mjs",
-    "test": "node --test test/",
+    "test": "node --test \"test/**/*.test.js\"",
     "manifest": "node tools/make-manifest.mjs",
     "import-assets": "bash tools/import-assets.sh"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
