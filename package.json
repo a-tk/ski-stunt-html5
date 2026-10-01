@@ -1,0 +1,14 @@
+{
+  "name": "ski-stunt-html5",
+  "version": "0.1.0",
+  "description": "Ski Stunt Simulator, ported from the Java/AWT demo to JavaScript and HTML5 canvas",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test test/",
+    "manifest": "node tools/make-manifest.mjs",
+    "import-assets": "bash tools/import-assets.sh"
+  },
+  "engines": { "node": ">=20" }
+}

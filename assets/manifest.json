@@ -1,0 +1,189 @@
+{
+ "terrains": [
+  {
+   "file": "terrain/gnd_camelCrates.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_camelSnowman.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_camelTrees.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_crash_burn.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_deathValley.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_exercise1.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_exercise2.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_exercise3.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_exercise4.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_gap.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_gapCrumbleShell.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_hutRock.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_jump.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_jump3.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_kicker_jump.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_lesson1.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_lesson2.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_lesson3.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_lesson4.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_lessonPrep.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_practice.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_practise.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_ravine.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_ravineJet.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_road.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_sample_crates.txt",
+   "map": true
+  },
+  {
+   "file": "terrain/gnd_sample_hill.txt",
+   "map": true
+  },
+  {
+   "file": "terrain/gnd_sample_pushcrates.txt",
+   "map": true
+  },
+  {
+   "file": "terrain/gnd_ted.txt",
+   "map": false
+  },
+  {
+   "file": "terrain/gnd_the_wall.txt",
+   "map": false
+  }
+ ],
+ "skins": [
+  {
+   "dir": "default",
+   "files": [
+    "arm.poly",
+    "dski.poly",
+    "foot.poly",
+    "lski.poly",
+    "rski.poly",
+    "skin.txt",
+    "thigh.poly",
+    "torso.poly"
+   ]
+  },
+  {
+   "dir": "girl_skier",
+   "files": [
+    "arm.poly",
+    "dski.poly",
+    "foot.poly",
+    "lski.poly",
+    "rski.poly",
+    "skin.txt",
+    "stripes.png",
+    "thigh.poly",
+    "torso.poly"
+   ]
+  },
+  {
+   "dir": "neon",
+   "files": [
+    "arm.poly",
+    "dski.poly",
+    "foot.poly",
+    "lski.poly",
+    "rski.poly",
+    "skin.txt",
+    "stripes.png",
+    "thigh.poly",
+    "torso.poly"
+   ]
+  }
+ ],
+ "objects": [
+  "barrier",
+  "crate",
+  "ramp"
+ ],
+ "objectFiles": [
+  "barrier.obj",
+  "crate.obj",
+  "planks.png",
+  "ramp.obj"
+ ],
+ "demos": [
+  "animations/demo_crash_burn.ani",
+  "animations/demo_kicker.ani",
+  "animations/demo_practise.ani",
+  "animations/demo_the_wall.ani"
+ ],
+ "sounds": [
+  "sounds/applause.wav",
+  "sounds/bindings.wav",
+  "sounds/cockoo.wav"
+ ]
+}

@@ -1,0 +1,98 @@
+#----------------------------------------------------------------------
+# ground
+#----------------------------------------------------------------------
+
+terrain terrain/gnd_kicker_jump.txt
+
+#----------------------------------------------------------------------
+# load skier
+#----------------------------------------------------------------------
+
+< art/skier.afig
+# < skier_simp.afig
+artfig setname skier
+
+mass 5 1
+mass 5 2
+mass 10 3
+mass 3 4
+
+tog_link
+
+< config/normal.setup
+
+mousemap 2 y 100 0
+mousemap 3 y -130 20
+mousemap 4 y -20 70
+mousemap 3 x 20 -20 
+mousemap 2 x 60 0
+
+dgen dyn_ski2
+usemonitor ski2Monitor config/ski.snd config/normal.setup config/relax.setup
+
+#----------------------------------------------------------------------
+# right ski
+#----------------------------------------------------------------------
+
+world newaf
+< art/skier_ski.afig
+artfig setname drski
+
+tog_link
+
+jt_pd 1 0 0.00 -10 10 -1 1 
+dgen dyn_ski2_ski
+
+# --- make the right ski invisible since it is not treated as a 
+# --- separate object yet
+artfig active false
+
+#----------------------------------------------------------------------
+# left ski
+#----------------------------------------------------------------------
+
+world newaf
+< art/skier_ski.afig
+artfig setname dlski
+
+tog_link
+
+jt_pd 1 0 0.00 -10 10 -1 1 
+dgen dyn_ski2_ski
+
+# --- make the right ski invisible since it is not treated as a 
+# --- separate object yet
+artfig active false
+
+#----------------------------------------------------------------------
+# skin (link decor for skier and skis; see art/skins/)
+#----------------------------------------------------------------------
+
+skin default
+
+#----------------------------------------------------------------------
+# simulation
+#----------------------------------------------------------------------
+
+world setaf skier
+dt_disp 0.03
+dt_sim 0.002
+t_end 1e20
+
+#autopan xr yr %x %y
+autopan 1 0.1 0.3 0.6
+#autopan 0 0 0.5 0.5
+# autopan 1 1
+# hotzone 5 475 5 475
+hotzone 5 205 5 205
+hotzone
+
+bgimage art/moraine.jpg
+zoom -10
+
+t_end 0.6
+simulate
+simulate stop
+t_end 1e20
+
+

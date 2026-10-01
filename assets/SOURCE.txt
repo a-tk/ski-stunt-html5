@@ -1,0 +1,3 @@
+Imported from /Users/andrekeys/git/ski-stunt-applet
+Java repo commit: c56594f0b5872c33c60bc8bb2fb87adc3f888a5e
+(includes the untracked art/skins/girl_skier skin if present in the working tree)

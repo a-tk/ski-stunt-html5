@@ -1,0 +1,11 @@
+# Skin manifest. Files are listed in draw order (later files paint over earlier ones).
+#   poly <file> [decorName]   decoration for the main skier figure
+#   ski  <file>               decoration for each detached ski figure
+name Neon
+poly lski.poly lski.decor
+poly foot.poly
+poly rski.poly rski.decor
+poly thigh.poly
+poly torso.poly
+poly arm.poly
+ski dski.poly

@@ -1,0 +1,9 @@
+# per-map settings, run after terrain/gnd_setup.txt
+gnd xApplause 90
+gnd start -40 1
+object ramp 20 -3.75 -14 1
+object crate 40 -10 0 1 dynamic 8
+object crate 41 -10 0 1 dynamic 8
+object crate 40.5 -9 0 1 dynamic 8
+object crate 60 -10 0 2 dynamic 60
+object barrier 72 -10 0 1

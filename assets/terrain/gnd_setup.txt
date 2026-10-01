@@ -1,0 +1,10 @@
+gnd color 1 1 1
+gnd kp 2000
+gnd kd 200
+gnd kpSki 300
+gnd kdSki 30
+gnd cf 0.6
+gnd slices 2 1e-4
+### starts applause when past x=25 on the terrain
+gnd xApplause 30
+# gnd togslices 

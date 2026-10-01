@@ -1,0 +1,7 @@
+name Ramp
+color 150 150 160
+outline 70 70 80 1.5
+# shape: x y friction [snow-spray], local coordinates, clockwise
+-2.000000 0.000000 0.2 0.5
+2.000000 1.500000 0.2 0.5
+2.000000 0.000000 0.2 0.5

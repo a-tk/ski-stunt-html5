@@ -1,0 +1,79 @@
+link 1
+
+# ski
+start_poly
+color 117 19 38
+new_pt 0.261326 0.271681
+new_pt 0.329783 0.237453
+new_pt 0.449583 0.222478
+new_pt 0.565104 0.220338
+new_pt 1.487134 0.224617
+new_pt 1.615491 0.224617
+new_pt 1.752405 0.213921
+new_pt 1.874344 0.209642
+new_pt 1.955637 0.248149
+new_pt 2.015536 0.297353
+new_pt 2.024093 0.280238
+new_pt 1.962054 0.222478
+new_pt 1.870065 0.183971
+new_pt 1.733151 0.183971
+new_pt 1.600516 0.198946
+new_pt 1.405841 0.194667
+new_pt 1.209027 0.205363
+new_pt 0.971567 0.207503
+new_pt 0.774753 0.198946
+new_pt 0.577939 0.194667
+new_pt 0.396101 0.201085
+new_pt 0.306251 0.218199
+new_pt 0.246351 0.256706
+end_poly
+
+# front-bind-bottom
+start_poly
+color 215 206 98
+new_pt 1.326688 0.239592
+new_pt 1.335245 0.224617
+new_pt 1.226142 0.228896
+new_pt 1.219724 0.241731
+end_poly
+
+# front-bind top
+start_poly
+color 104 104 103
+new_pt 1.311713 0.258845
+new_pt 1.320270 0.243871
+new_pt 1.230420 0.246010
+new_pt 1.234699 0.280238
+end_poly
+
+# rear-bind bottom
+start_poly
+color 215 206 98
+new_pt 0.894553 0.250288
+new_pt 0.898832 0.222478
+new_pt 0.779032 0.226756
+new_pt 0.796146 0.248149
+end_poly
+
+# rear-bind mid
+start_poly
+color 104 104 103
+new_pt 0.881717 0.297353
+new_pt 0.892414 0.252428
+new_pt 0.800425 0.248149
+new_pt 0.802564 0.258845
+new_pt 0.836792 0.275960
+new_pt 0.843210 0.301631
+end_poly
+
+# rear-bind top
+start_poly
+color 126 20 42
+new_pt 0.845350 0.335860
+new_pt 0.875300 0.327302
+new_pt 0.881717 0.297353
+new_pt 0.845350 0.303770
+new_pt 0.841071 0.314467
+new_pt 0.828235 0.318745
+new_pt 0.823957 0.333720
+end_poly
