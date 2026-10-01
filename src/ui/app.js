@@ -5,6 +5,9 @@ import { World } from '../sim/world.js';
 import { CanvasRenderer } from '../gfx/renderer.js';
 import { Audio } from '../monitor/audio.js';
 import { listSkins, skinDisplayName } from '../art/skinloader.js';
+import { openMapEditor } from './editors/mapeditor.js';
+import { openObjectEditor } from './editors/objecteditor.js';
+import { openSkinEditor } from './editors/skineditor.js';
 
 /** The terrains with their labels, in the original dropdown order; the four with demos name them. */
 const TERRAINS = [
@@ -29,7 +32,7 @@ function layout(world, w, h) {
 }
 
 const $ = (id) => document.getElementById(id);
-const typing = (t) => t instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) && t.type !== 'range';
+const typing = (t) => t instanceof HTMLElement && (t.closest('#editors') != null || (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) && t.type !== 'range'));
 
 export async function startApp() {
   const vfs = new Vfs({ base: 'assets/' });
@@ -43,6 +46,7 @@ export async function startApp() {
   const renderer = new CanvasRenderer(canvas, world);
   let dirty = true;
   world.onRedraw = () => { dirty = true; };
+  const requestRedraw = () => { dirty = true; };
 
   // ---------------------------------------------------------------- start the world from the setup script
   world.syncSim = true;
@@ -54,7 +58,7 @@ export async function startApp() {
   }
   $('loading').hidden = true;
 
-  const app = { vfs, world, audio, renderer, currentTerrain: TERRAINS[0][1], currentSkin: 'default', demoFile: TERRAINS[0][2] };
+  const app = { vfs, world, audio, renderer, requestRedraw, currentTerrain: TERRAINS[0][1], currentSkin: 'default', demoFile: TERRAINS[0][2] };
   window.skiStunt = app; // handy for debugging in the console
 
   // ---------------------------------------------------------------- controls
@@ -92,7 +96,17 @@ export async function startApp() {
     fillTerrains();
     btnDemo.disabled = true;
   };
+  /** Adds a skin made in the skin editor to the dropdown and selects it (it is already applied). */
+  app.addSkin = async (label, dir) => { app.currentSkin = dir; await fillSkins(); };
   app.focusGame = () => canvas.focus();
+  $('btn-edit-map').addEventListener('click', () => openMapEditor(app));
+  $('btn-edit-objects').addEventListener('click', () => openObjectEditor(app));
+  $('btn-edit-skin').addEventListener('click', () => openSkinEditor(app));
+
+  // user-made skins, maps and objects live only in this tab: say so, and warn before leaving with any
+  const banner = $('unsaved');
+  vfs.onChange(() => { banner.hidden = vfs.userFiles().length === 0; });
+  addEventListener('beforeunload', (e) => { if (vfs.userFiles().length) { e.preventDefault(); e.returnValue = ''; } });
 
   const loadTerrain = async (file) => {
     world.stop();

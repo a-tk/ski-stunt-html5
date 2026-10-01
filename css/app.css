@@ -18,7 +18,8 @@ button:hover:not(:disabled) { border-color: var(--accent); }
 button:disabled { opacity: 0.45; cursor: default; }
 select { font: inherit; max-width: 170px; }
 #unsaved { padding: 4px 10px; background: var(--warn); border-bottom: 1px solid var(--line); font-size: 13px; }
-#stage { position: relative; flex: 1; min-height: 0; }
+#workspace { flex: 1; min-height: 0; display: flex; }
+#stage { position: relative; flex: 1; min-width: 0; min-height: 0; }
 #game { display: block; width: 100%; height: 100%; outline: none; cursor: crosshair; }
 #loading { position: absolute; inset: 0; display: grid; place-items: center; background: var(--bg); font-size: 18px; }
 #loading[hidden] { display: none; }
@@ -26,3 +27,23 @@ dialog { border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; 
 dialog img { float: right; width: 190px; margin: 0 0 8px 12px; }
 dialog .small { font-size: 12px; opacity: 0.8; }
 kbd { padding: 0 4px; border: 1px solid var(--line); border-radius: 3px; background: var(--bar); font: inherit; font-size: 12px; }
+
+/* ---- editors ---- */
+#editors { width: min(560px, 48vw); flex: none; display: flex; flex-direction: column; border-left: 1px solid var(--line); background: var(--bg); min-height: 0; }
+#editors[hidden] { display: none; }
+.editor-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bar); border-bottom: 1px solid var(--line); }
+.editor-body { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+.editor-body canvas.poly { width: 100%; height: 340px; border: 1px solid var(--line); border-radius: 4px; flex: none; touch-action: none; }
+.editor-body .tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.editor-body .tools .zoom { min-width: 80px; font-size: 12px; opacity: 0.8; }
+.editor-body details { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; }
+.editor-body summary { cursor: pointer; font-weight: 600; padding: 2px 0; }
+.editor-body .row { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; margin: 6px 0; }
+.editor-body .field { display: inline-flex; align-items: center; gap: 4px; }
+.editor-body .field span { opacity: 0.8; min-width: 0; }
+.editor-body select { max-width: none; }
+.editor-body select[size] { width: 100%; }
+.editor-body .status { min-height: 1.3em; font-size: 13px; padding: 2px 4px; }
+.editor-body .status.warn { color: #b3261e; }
+.editor-body input[type=color] { width: 44px; height: 26px; padding: 0; border: 1px solid var(--line); background: none; }
+.editor-body input[type=text] { font: inherit; }

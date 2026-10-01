@@ -16,17 +16,20 @@
     <button id="btn-replay" type="button">Replay</button>
     <button id="btn-demo" type="button">Demo</button>
     <span class="spacer"></span>
-    <button id="btn-edit-map" type="button" disabled>Edit Map…</button>
-    <button id="btn-edit-objects" type="button" disabled>Edit Objects…</button>
-    <button id="btn-edit-skin" type="button" disabled>Edit Skin…</button>
+    <button id="btn-edit-map" type="button">Edit Map…</button>
+    <button id="btn-edit-objects" type="button">Edit Objects…</button>
+    <button id="btn-edit-skin" type="button">Edit Skin…</button>
   </header>
   <div id="unsaved" hidden>
     Your skins, maps and objects live only in this browser tab. Use <b>Download</b> in an editor to keep them.
   </div>
-  <main id="stage">
-    <canvas id="game" tabindex="0"></canvas>
-    <div id="loading">Loading…</div>
-  </main>
+  <div id="workspace">
+    <main id="stage">
+      <canvas id="game" tabindex="0"></canvas>
+      <div id="loading">Loading…</div>
+    </main>
+    <aside id="editors" hidden></aside>
+  </div>
   <dialog id="help">
     <h2>Ski Stunt</h2>
     <img src="assets/art/interface.jpg" alt="How the mouse position controls the skier">
@@ -36,7 +39,6 @@
     <p class="small"><kbd>&lt;</kbd> / <kbd>&gt;</kbd> slow down / speed up &middot; <kbd>↑</kbd> / <kbd>↓</kbd> zoom &middot; <kbd>Esc</kbd> stop</p>
     <form method="dialog"><button>OK</button></form>
   </dialog>
-  <div id="editors"></div>
   <script type="module" src="src/main.js"></script>
 </body>
 </html>

@@ -9,7 +9,8 @@
     "test": "node --test \"test/**/*.test.js\"",
     "manifest": "node tools/make-manifest.mjs",
     "import-assets": "bash tools/import-assets.sh",
-    "smoke": "node tools/smoke.mjs"
+    "smoke": "node tools/smoke.mjs",
+    "smoke:editors": "node tools/smoke-editors.mjs"
   },
   "engines": {
     "node": ">=20"
