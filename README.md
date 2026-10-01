@@ -69,6 +69,6 @@ doubles where Java uses floats, so long runs diverge (the physics is chaotic).
 
 - The simulation is tied to the clock (fixed time step); the Java version ran as fast as the CPU allowed.
 - Skins, maps and objects are not written to disk; they are kept in memory and offered as downloads.
-- Not ported (unused by any shipped file): billboards, `anidump`/`showlog`, `world ls/delaf`,
-  `artfig panTgt`, `gnd togslices`, the generic `usemonitor snowEffects` path's extras and `restpose` with
-  explicit angles in scripts are supported where noted in `src/script/commands.js`.
+- Not ported (no shipped file uses them): the `billboard`, `show`, `anidump`, `showlog` and `world ls`
+  commands and `linkDecor load/setname`. Everything the shipped scripts, maps, skins and demos use is
+  supported (`src/script/commands.js` lists the commands).
