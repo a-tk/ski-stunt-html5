@@ -8,7 +8,8 @@
     "start": "node tools/serve.mjs",
     "test": "node --test \"test/**/*.test.js\"",
     "manifest": "node tools/make-manifest.mjs",
-    "import-assets": "bash tools/import-assets.sh"
+    "import-assets": "bash tools/import-assets.sh",
+    "smoke": "node tools/smoke.mjs"
   },
   "engines": {
     "node": ">=20"

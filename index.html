@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ski Stunt</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header id="bar">
+    <button id="btn-help" type="button">Instructions</button>
+    <label>Terrain <select id="sel-terrain"></select></label>
+    <label>Skin <select id="sel-skin"></select></label>
+    <label class="slider">Speed <span class="hint">fast</span><input id="rng-speed" type="range" min="0" max="7" step="1" value="0"><span class="hint">slow</span></label>
+    <label class="slider">Zoom <span class="hint">out</span><input id="rng-zoom" type="range" min="-12" max="-5" step="1" value="-10"><span class="hint">in</span></label>
+    <button id="btn-replay" type="button">Replay</button>
+    <button id="btn-demo" type="button">Demo</button>
+    <span class="spacer"></span>
+    <button id="btn-edit-map" type="button" disabled>Edit Map…</button>
+    <button id="btn-edit-objects" type="button" disabled>Edit Objects…</button>
+    <button id="btn-edit-skin" type="button" disabled>Edit Skin…</button>
+  </header>
+  <div id="unsaved" hidden>
+    Your skins, maps and objects live only in this browser tab. Use <b>Download</b> in an editor to keep them.
+  </div>
+  <main id="stage">
+    <canvas id="game" tabindex="0"></canvas>
+    <div id="loading">Loading…</div>
+  </main>
+  <dialog id="help">
+    <h2>Ski Stunt</h2>
+    <img src="assets/art/interface.jpg" alt="How the mouse position controls the skier">
+    <p>Press <kbd>Space</kbd> to start and stop the simulation.</p>
+    <p>Use the mouse position to control the pose of the skier, as shown in the picture.</p>
+    <p>Begin learning with the <b>practise</b> terrain.</p>
+    <p class="small"><kbd>&lt;</kbd> / <kbd>&gt;</kbd> slow down / speed up &middot; <kbd>↑</kbd> / <kbd>↓</kbd> zoom &middot; <kbd>Esc</kbd> stop</p>
+    <form method="dialog"><button>OK</button></form>
+  </dialog>
+  <div id="editors"></div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
