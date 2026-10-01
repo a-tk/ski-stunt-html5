@@ -75,14 +75,26 @@ export class Winview {
       steps = 1;
     }
     if (this.x_rate !== 0 || this.y_rate !== 0) {
-      for (let i = 0; i < steps; i++) {
-        this.x_avg = this.x_rate * target[0] + (1 - this.x_rate) * this.x_avg;
-        this.y_avg = this.y_rate * target[1] + (1 - this.y_rate) * this.y_avg;
-        this.x_org = this.x_avg - this.x_offset * this.width / this.sf;
-        this.y_org = this.y_avg - this.y_offset * this.height / this.sf;
-        this.modelview();
-      }
+      for (let i = 0; i < steps; i++) this.#track(target, this.x_rate, this.y_rate);
     }
+  }
+
+  /**
+   * Like recenter, but for a camera that moves every rendered frame: 'dt' seconds of sim time have
+   * passed since the last call, and the smoothing rates (which are per 'dtDisp' step) are rescaled to match.
+   */
+  follow(target, dt, dtDisp) {
+    if (this.x_rate === 0 && this.y_rate === 0) return;
+    const k = dt / dtDisp;
+    this.#track(target, 1 - (1 - this.x_rate) ** k, 1 - (1 - this.y_rate) ** k);
+  }
+
+  #track(target, xRate, yRate) {
+    this.x_avg = xRate * target[0] + (1 - xRate) * this.x_avg;
+    this.y_avg = yRate * target[1] + (1 - yRate) * this.y_avg;
+    this.x_org = this.x_avg - this.x_offset * this.width / this.sf;
+    this.y_org = this.y_avg - this.y_offset * this.height / this.sf;
+    this.modelview();
   }
 
   set_autopan(xRate, yRate, xOffset, yOffset) {

@@ -29,8 +29,11 @@ export class Sim {
   /** True once the run is over (stopped, aborted or t_end reached). */
   get finished() { return this.stopped || this.aborted || !(this.t < this.tEnd); }
 
-  /** One physics step plus, when due, the per-frame work (camera, log). Returns false if the sim aborted. */
-  stepOnce() {
+  /**
+   * One physics step plus, when due, the per-frame work (camera, log). Returns false if the sim aborted.
+   * With stepCamera false the caller moves the camera itself (advance() does, once per rendered frame).
+   */
+  stepOnce(stepCamera = true) {
     const w = this.world;
     if (!w.sim_step(this.dtSim)) {
       console.log('Simulation aborted.');
@@ -38,8 +41,10 @@ export class Sim {
       return false;
     }
     if (this.t > this.nextDisp) {
-      w.sim_get_pan(this.pan);
-      w.winview.recenter(this.pan);
+      if (stepCamera) {
+        w.sim_get_pan(this.pan);
+        w.winview.recenter(this.pan);
+      }
       w.update();
       if (w.doLogging) w.sim_log_state(this.t);
       this.nextDisp += this.dtDisp;
@@ -48,12 +53,20 @@ export class Sim {
     return true;
   }
 
-  /** Runs for about 'seconds' of simulated time. */
+  /**
+   * Runs for about 'seconds' of simulated time. The camera follows once per call rather than once per
+   * dtDisp, so it moves on every rendered frame and the skier doesn't jitter against the scenery.
+   */
   advance(seconds) {
     this.carry += seconds;
+    const t0 = this.t;
     while (this.carry >= this.dtSim && !this.finished) {
-      if (!this.stepOnce()) break;
+      if (!this.stepOnce(false)) break;
       this.carry -= this.dtSim;
+    }
+    if (this.t > t0) {
+      this.world.sim_get_pan(this.pan);
+      this.world.winview.follow(this.pan, this.t - t0, this.dtDisp);
     }
     if (this.finished) this.end();
   }
