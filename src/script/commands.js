@@ -251,6 +251,8 @@ export function registerCommands(interp) {
     if (a.length === 1) { w.hotzone.toggle(); w.repaint(); }
     else if (a.length === 5) {
       w.hotzone.set(int(a[1]) + w.clipX, int(a[2]) + w.clipX, int(a[3]) + w.clipY, int(a[4]) + w.clipY);
+      // the script's fixed pixel box is only the Java default; here the zone scales with the screen instead
+      w.hotzone.fitViewport(w.gfx2d.width, w.gfx2d.height);
     } else console.log('Error: hotzone - incorrect # args');
   });
 

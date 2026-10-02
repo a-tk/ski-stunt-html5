@@ -158,11 +158,8 @@ export async function startApp() {
     world.interp('world setaf skier');
     world.interp('simulate stop');
     world.interp('restpose start');
-    if (world.hotzone && lastMouse) {
-      // the mouse-control zone is centered on the pointer, so the run starts neutral
-      world.hotzone.centerOn(lastMouse[0], lastMouse[1], world.gfx2d.width, world.gfx2d.height);
-      world.mouseNorm[0] = world.mouseNorm[1] = 0.5;
-    }
+    // the steering zone is fixed on screen, so the run starts with whatever the pointer is already doing
+    if (world.hotzone && lastMouse) world.hotzone.normalize(lastMouse[0], lastMouse[1], world.mouseNorm);
     world.interp('simulate');
   };
 
@@ -195,7 +192,7 @@ export async function startApp() {
     world.gfx2d.resize(w, h);
     world.winview.resize(w, h);
     layout(world, w, h);
-    if (world.hotzone) { world.hotzone.height = h; world.hotzone.width = w; }
+    world.hotzone?.fitViewport(w, h);
     dirty = true;
   };
   new ResizeObserver(resize).observe(stage);
