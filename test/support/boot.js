@@ -7,17 +7,10 @@ import { World } from '../../src/sim/world.js';
 
 export const assetsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'assets');
 
-/** Maps that only the tests use (they're not in the game's terrain list); same layout as assets/. */
-export const fixtureAssetsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'fixtures');
-
-/** Reads from assets/, then from test/fixtures/ for the test-only maps. */
 export function diskVfs() {
   return new Vfs({
     loader: async (p) => {
-      for (const dir of [assetsDir, fixtureAssetsDir]) {
-        try { return new Uint8Array(await readFile(path.join(dir, p))); } catch { /* try the next one */ }
-      }
-      return null;
+      try { return new Uint8Array(await readFile(path.join(assetsDir, p))); } catch { return null; }
     },
   });
 }

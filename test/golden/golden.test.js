@@ -11,11 +11,11 @@ const golden = JSON.parse(await readFile(new URL('../fixtures/golden.json', impo
 const TOL = 1e-3;
 
 const scenarios = {
-  rest_flat: { setup: ['terrain terrain/gnd_exercise1.txt'], vx: 0, steps: 1500 },
+  rest_flat: { setup: ['terrain terrain/gnd_practice.txt'], vx: 0, steps: 1500 },
   slide_kicker: { setup: ['terrain terrain/gnd_kicker_jump.txt'], vx: 8, steps: 1500 },
-  crate_rest: { setup: ['terrain terrain/gnd_exercise1.txt', 'object crate 20 0 0 1 dynamic 10'], vx: 0, steps: 1000 },
-  crate_push: { setup: ['terrain terrain/gnd_exercise1.txt', 'object crate 6 0 0 1 dynamic 10'], vx: 8, steps: 1500 },
-  static_crate: { setup: ['terrain terrain/gnd_exercise1.txt', 'object crate 6 0 0 1'], vx: 6, steps: 1500 },
+  crate_rest: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 20 0 0 1 dynamic 10'], vx: 0, steps: 1000 },
+  crate_push: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1 dynamic 10'], vx: 8, steps: 1500 },
+  static_crate: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1'], vx: 6, steps: 1500 },
 };
 
 for (const [name, s] of Object.entries(scenarios)) {

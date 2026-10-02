@@ -83,11 +83,11 @@ public class Golden {
     world = ap.world;
     world.stop();
 
-    scenario("rest_flat", new String[] {"terrain terrain/gnd_exercise1.txt"}, 0, 1500, 25);
+    scenario("rest_flat", new String[] {"terrain terrain/gnd_practice.txt"}, 0, 1500, 25);
     scenario("slide_kicker", new String[] {"terrain terrain/gnd_kicker_jump.txt"}, 8, 1500, 25);
-    scenario("crate_rest", new String[] {"terrain terrain/gnd_exercise1.txt", "object crate 20 0 0 1 dynamic 10"}, 0, 1000, 25);
-    scenario("crate_push", new String[] {"terrain terrain/gnd_exercise1.txt", "object crate 6 0 0 1 dynamic 10"}, 8, 1500, 25);
-    scenario("static_crate", new String[] {"terrain terrain/gnd_exercise1.txt", "object crate 6 0 0 1"}, 6, 1500, 25);
+    scenario("crate_rest", new String[] {"terrain terrain/gnd_practice.txt", "object crate 20 0 0 1 dynamic 10"}, 0, 1000, 25);
+    scenario("crate_push", new String[] {"terrain terrain/gnd_practice.txt", "object crate 6 0 0 1 dynamic 10"}, 8, 1500, 25);
+    scenario("static_crate", new String[] {"terrain terrain/gnd_practice.txt", "object crate 6 0 0 1"}, 6, 1500, 25);
     java.nio.file.Files.write(java.nio.file.Paths.get(args[1]), ("{\n" + out + "\n}\n").getBytes());
     System.exit(0);
   }

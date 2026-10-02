@@ -5,17 +5,17 @@ import { MapData } from '../../src/terrain/mapdata.js';
 import { diskVfs } from '../support/boot.js';
 
 test('settings = gnd_setup.txt defaults overridden by the map file', async () => {
-  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_sample_crates.txt');
+  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_crates.txt');
   assert.equal(s.kp, 2000);              // from gnd_setup.txt
-  assert.equal(s.xApplause, 90);         // from the .map (gnd_setup says 30)
-  assert.equal(s.startX, -40);
-  assert.equal(s.objects.length, 6);
+  assert.equal(s.xApplause, 120);        // from the .map (gnd_setup says 30)
+  assert.equal(s.startX, 2);
+  assert.equal(s.objects.length, 5);
   assert.equal(s.objects[0].type, 'crate');
-  assert.equal(s.objects[0].rotation, -14);
+  assert.equal(s.objects[0].rotation, -10);
 });
 
 test('pushable objects keep their flag and mass through text', async () => {
-  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_sample_pushcrates.txt');
+  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_pushcrates.txt');
   const dyn = s.objects.filter((o) => o.dynamic);
   assert.equal(dyn.length, 4);
   assert.equal(dyn[0].mass, 8);
@@ -27,7 +27,7 @@ test('pushable objects keep their flag and mass through text', async () => {
 });
 
 test('a map without a .map file just gets the defaults', async () => {
-  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_exercise1.txt');
+  const s = await MapSettings.load(diskVfs(), 'terrain/gnd_practice.txt');
   assert.equal(s.xApplause, 30);
   assert.equal(s.objects.length, 0);
 });

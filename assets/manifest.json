@@ -9,6 +9,10 @@
    "map": false
   },
   {
+   "file": "terrain/gnd_crates.txt",
+   "map": true
+  },
+  {
    "file": "terrain/gnd_gap.txt",
    "map": false
   },
@@ -23,6 +27,10 @@
   {
    "file": "terrain/gnd_practice.txt",
    "map": false
+  },
+  {
+   "file": "terrain/gnd_pushcrates.txt",
+   "map": true
   },
   {
    "file": "terrain/gnd_ravine.txt",
