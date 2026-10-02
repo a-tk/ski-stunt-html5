@@ -5,6 +5,9 @@ the `ski-stunt-applet` repository. The original game is the Ski Stunt Simulator 
 (https://www.cs.ubc.ca/~van/sssjava/javademo.html); this port covers that demo plus the additions made
 in the Java repo: skins, a map editor, objects (including pushable crates) and an object editor.
 
+**Play it online: https://a-tk.github.io/ski-stunt-html5/** (deployed from `master` by
+`.github/workflows/pages.yml`).
+
 No build step and no dependencies: plain ES modules.
 
 ## Running
@@ -15,10 +18,10 @@ npm start          # serves this folder at http://localhost:8080/
 
 Open http://localhost:8080/. A static server is required (browsers don't load modules or data from
 `file://`); any static server works, e.g. `python3 -m http.server 8080`. The site is plain static files,
-so it can be hosted anywhere.
+so it can be hosted anywhere (GitHub Pages does exactly that).
 
 **Playing:** press <kbd>Space</kbd> to start and stop; the mouse position controls the skier's pose (a
-200 x 200 px zone centered on the pointer when the run starts). <kbd>&lt;</kbd> / <kbd>&gt;</kbd> slow down /
+square zone, half the screen's shorter side, centered on the canvas; the box is drawn on screen). <kbd>&lt;</kbd> / <kbd>&gt;</kbd> slow down /
 speed up, <kbd>↑</kbd> / <kbd>↓</kbd> zoom, <kbd>Esc</kbd> stops. The simulation runs in real time; the speed
 slider slows it down (1x to 1/8x). Terrain, skin, replay of your last run and four recorded demos are in the
 toolbar.
@@ -72,4 +75,3 @@ doubles where Java uses floats, so long runs diverge (the physics is chaotic).
 - Not ported (no shipped file uses them): the `billboard`, `show`, `anidump`, `showlog` and `world ls`
   commands and `linkDecor load/setname`. Everything the shipped scripts, maps, skins and demos use is
   supported (`src/script/commands.js` lists the commands).
-
