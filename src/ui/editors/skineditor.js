@@ -9,7 +9,7 @@ import { PolygonView } from './polygonview.js';
 import { ContextRenderer } from '../../gfx/renderer.js';
 import { MapData, Pt } from '../../terrain/mapdata.js';
 import { Poly } from '../../art/linkdecor.js';
-import { SkinLoader, SKINS_DIR, SKIER, SKI_FIGS, skinDisplayName } from '../../art/skinloader.js';
+import { SkinLoader, SKINS_DIR, SKIER, SKI_FIGS } from '../../art/skinloader.js';
 import { makeZip } from '../../storage/zip.js';
 import { downloadFile } from '../../storage/download.js';
 

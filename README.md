@@ -8,7 +8,8 @@ in the Java repo: skins, a map editor, objects (including pushable crates) and a
 **Play it online: https://a-tk.github.io/ski-stunt-html5/** (deployed from `master` by
 `.github/workflows/pages.yml`).
 
-No build step and no dependencies: plain ES modules.
+No build step and no runtime dependencies: plain ES modules. (`npm install` only fetches ESLint for
+`npm run lint`.)
 
 ## Running
 

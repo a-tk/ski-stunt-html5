@@ -44,14 +44,14 @@ export class PolygonView {
     this.lastY = 0;
     this.needFit = false;
     // overridable hooks
-    this.extendBounds = (box) => {};
-    this.paintUnder = (ctx) => {};
-    this.paintOver = (ctx) => {};
+    this.extendBounds = (_box) => {};
+    this.paintUnder = (_ctx) => {};
+    this.paintOver = (_ctx) => {};
     this.fillColor = () => '#fff';
-    this.edgeColor = (i) => '#000';
-    this.pressExtra = (e) => false;
-    this.draggedExtra = (e) => {};
-    this.released = (mode) => {};
+    this.edgeColor = (_i) => '#000';
+    this.pressExtra = (_e) => false;
+    this.draggedExtra = (_e) => {};
+    this.released = (_mode) => {};
 
     canvas.tabIndex = 0;
     canvas.addEventListener('pointerdown', (e) => this.press(e));
@@ -255,7 +255,7 @@ export class PolygonView {
     this.render();
   }
 
-  release(e) {
+  release(_e) {
     const was = this.drag;
     this.drag = DRAG_NONE;
     if (was === DRAG_POINT) this.listener.editFinished();

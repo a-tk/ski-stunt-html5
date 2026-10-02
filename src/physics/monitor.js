@@ -8,10 +8,10 @@ export class ArtfigMonitor {
   /** Called when a run starts. */
   reset() {}
 
-  draw(r) {}
+  draw(_r) {}
 
   /** Called after every step of the figure with the step length. */
-  update(dt) {}
+  update(_dt) {}
 
   init(world) {
     this.world = world;

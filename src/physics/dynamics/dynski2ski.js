@@ -9,10 +9,6 @@ const MAX_EQNS = 20;
 
 export class DynSki2Ski {
   eval(var1, var2, var3, var4) {
-    const var5 = 1.0;
-    const var6 = 0.25295;
-    const var7 = 0.576601;
-    const var8 = -1.198019;
     const var9 = Array.from({ length: MAX_EQNS }, () => new Array(MAX_EQNS).fill(0));
     const var10 = new Array(MAX_EQNS).fill(0);
     const var11 = new Array(MAX_EQNS).fill(0);

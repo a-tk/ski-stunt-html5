@@ -10,9 +10,15 @@
     "manifest": "node tools/make-manifest.mjs",
     "import-assets": "bash tools/import-assets.sh",
     "smoke": "node tools/smoke.mjs",
-    "smoke:editors": "node tools/smoke-editors.mjs"
+    "smoke:editors": "node tools/smoke-editors.mjs",
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "globals": "^17.13.0"
   }
 }
