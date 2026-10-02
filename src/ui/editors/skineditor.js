@@ -9,7 +9,7 @@ import { PolygonView } from './polygonview.js';
 import { ContextRenderer } from '../../gfx/renderer.js';
 import { MapData, Pt } from '../../terrain/mapdata.js';
 import { Poly } from '../../art/linkdecor.js';
-import { SkinLoader, SKINS_DIR, SKIER, SKI_FIGS } from '../../art/skinloader.js';
+import { applySkin, SKINS_DIR, SKIER, SKI_FIGS } from '../../art/skinloader.js';
 import { makeZip } from '../../storage/zip.js';
 import { downloadFile } from '../../storage/download.js';
 
@@ -132,7 +132,7 @@ class SkinEditor {
   rebuild(refit) {
     const keep = this.sel;
     this.entries = [];
-    for (const d of this.fig?.linkDecors ?? []) d.polygons.forEach((p, i) => this.entries.push({ decor: d, poly: p, index: i }));
+    for (const d of this.fig?.linkDecors ?? []) for (const [i, p] of d.polygons.entries()) this.entries.push({ decor: d, poly: p, index: i });
     this.updating = true;
     this.polyList.replaceChildren(...this.entries.map((e) => el('option', {}, this.describe(e))));
     this.updating = false;
@@ -178,7 +178,7 @@ class SkinEditor {
   writeBack() {
     const e = this.entries[this.sel];
     if (!e) return;
-    const pts = this.view.data.pts;
+    const { pts } = this.view.data;
     const loc = [0, 0];
     e.poly.nPoints = pts.length;
     e.poly.xPoints = [];
@@ -263,7 +263,7 @@ class SkinEditor {
   async save() {
     if (this.isBuiltin()) { this.setStatus('Built-in skins are read-only. Type a name and use Save As.', true); return; }
     for (const d of this.skinDecors()) this.vfs.writeText(d.path, d.toText());
-    await SkinLoader.apply(this.world, this.skin);   // reloads everything (the other ski too) from the files
+    await applySkin(this.world, this.skin);   // reloads everything (the other ski too) from the files
     this.rebuild(false);
     this.app.requestRedraw();
     this.setStatus(`Saved skin ${this.skin} (in this tab; use Download to keep it)`);
@@ -301,7 +301,7 @@ class SkinEditor {
         this.vfs.writeBytes(dst, bytes);
       }
     }
-    await SkinLoader.apply(this.world, dir);
+    await applySkin(this.world, dir);
     this.app.addSkin(label, dir);
     this.nameIn.value = '';
     this.rebuild(true);
@@ -309,7 +309,7 @@ class SkinEditor {
   }
 
   async reload() {
-    await SkinLoader.apply(this.world, this.skin);
+    await applySkin(this.world, this.skin);
     this.rebuild(false);
     this.app.requestRedraw();
   }

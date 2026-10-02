@@ -25,7 +25,7 @@ export function registerCommands(interp) {
   // ------------------------------------------------------------ building a figure
   R('new_link', (a, w) => {
     if (a.length > 2) { console.log('USAGE: new_link [parent]'); return; }
-    if (a.length === 2) w.artfig.set_current(w.artfig.find_link(int(a[1])));
+    if (a.length === 2) w.artfig.setCurrent(w.artfig.findLink(int(a[1])));
     w.plist.reset();
   });
   R('new_pt', (a, w) => {
@@ -39,16 +39,16 @@ export function registerCommands(interp) {
   R('jt_org', (a, w) => {
     if (a.length !== 4) { console.log('Warning: jt_org - incorrect num of arg'); return; }
     const n = int(a[1]);
-    const i = w.artfig.find_link(n);
+    const i = w.artfig.findLink(n);
     if (i === -1) { console.log('fixpt: invalid link number'); return; }
-    w.artfig.set_current(i);
-    w.artfig.jt_org(n, num(a[2]), num(a[3]));
+    w.artfig.setCurrent(i);
+    w.artfig.jtOrg(n, num(a[2]), num(a[3]));
     w.repaint();
   });
   R('mass', (a, w) => {
     const f = w.artfig;
     if (a.length === 2) {
-      if (f.curr() !== -1) f.mass(f.curr_num(), num(a[1]));
+      if (f.curr() !== -1) f.mass(f.currNum(), num(a[1]));
     } else if (a.length === 3) {
       f.mass(int(a[2]), num(a[1]));
     } else if (a.length === 5) {
@@ -59,12 +59,12 @@ export function registerCommands(interp) {
   R('jt_pd', (a, w) => {
     if (a.length < 8) { console.log('Error: jt_pd incorrect num of arg'); return; }
     const n = int(a[1]);
-    w.artfig.jt_pd(n - 1, num(a[2]), num(a[3]), num(a[4]), num(a[5]), num(a[6]), num(a[7]));
-    if (a.length >= 12) w.artfig.jt_pd_limit(n - 1, num(a[8]), num(a[9]), num(a[10]), num(a[11]));
+    w.artfig.jtPd(n - 1, num(a[2]), num(a[3]), num(a[4]), num(a[5]), num(a[6]), num(a[7]));
+    if (a.length >= 12) w.artfig.jtPdLimit(n - 1, num(a[8]), num(a[9]), num(a[10]), num(a[11]));
   });
   R('mousemap', (a, w) => {
     if (a.length !== 5) { console.log('Error: mousemap - incorrect num of args'); return; }
-    w.artfig.jt_mousemap(int(a[1]) - 1, a[2].charAt(0), num(a[3]), num(a[4]));
+    w.artfig.jtMousemap(int(a[1]) - 1, a[2].charAt(0), num(a[3]), num(a[4]));
   });
   R('tog_link', (a, w) => { w.artfig.togglelink(); w.repaint(); });
   R('dgen', (a, w) => {
@@ -198,8 +198,8 @@ export function registerCommands(interp) {
   // ------------------------------------------------------------ skins
   R('skin', async (a, w) => {
     if (a.length !== 2) { bad('skin'); return; }
-    const { SkinLoader } = await import('../art/skinloader.js');
-    await SkinLoader.apply(w, a[1]);
+    const { applySkin } = await import('../art/skinloader.js');
+    await applySkin(w, a[1]);
   });
   R('linkDecor', (a, w) => {
     if (a.length < 2) { bad('linkdecor'); return; }
@@ -213,13 +213,13 @@ export function registerCommands(interp) {
   });
 
   // ------------------------------------------------------------ simulation control
-  R('t_end', (a, w) => { w.t_end = num(a[1]); });
-  R('dt_sim', (a, w) => { w.dt_sim = num(a[1]); });
-  R('dt_disp', (a, w) => { w.dt_disp = num(a[1]); });
+  R('t_end', (a, w) => { w.tEnd = num(a[1]); });
+  R('dt_sim', (a, w) => { w.dtSim = num(a[1]); });
+  R('dt_disp', (a, w) => { w.dtDisp = num(a[1]); });
   R('logging', (a, w) => { w.doLogging = a[1] === 'on'; });
   R('simulate', (a, w) => {
     if (a.length === 1) {
-      if (!w.sim_ready()) return;
+      if (!w.simReady()) return;
       if (w.sim == null) {
         const s = new Sim(w);
         w.sim = s;
@@ -229,14 +229,14 @@ export function registerCommands(interp) {
     } else if (w.sim != null) {
       if (a[1] === 'slower') w.speedLevel = Math.min(7, w.speedLevel + 1);
       else if (a[1] === 'faster') w.speedLevel = Math.max(0, w.speedLevel - 1);
-      else if (a[1] === 'stop') w.sim_stop();
+      else if (a[1] === 'stop') w.simStop();
     } else if (a[1] === 'stop') {
       // not running: nothing to stop
     }
   });
 
   // ------------------------------------------------------------ view
-  R('autopan', (a, w) => w.winview.set_autopan(num(a[1]), num(a[2]), num(a[3]), num(a[4])));
+  R('autopan', (a, w) => w.winview.setAutopan(num(a[1]), num(a[2]), num(a[3]), num(a[4])));
   R('zoom', (a, w) => {
     if (a.length !== 2) { bad('zoom'); return; }
     w.winview.changeZoom(int(a[1]));
@@ -259,17 +259,17 @@ export function registerCommands(interp) {
   // ------------------------------------------------------------ demos, replay, sound, particles
   R('showall', (a, w) => {
     const display = a[1] !== 'ndisp';
-    if (w.artfig.sim_showall_state(a)) {
-      w.artfig.sim_disp_state();
+    if (w.artfig.simShowallState(a)) {
+      w.artfig.simDispState();
       if (display) {
         const pan = [0, 0];
-        w.sim_get_pan(pan);
+        w.simGetPan(pan);
         w.winview.recenter(pan);
         w.update();
         return w.framePause();
       }
     }
-    return undefined;
+    return;
   });
   R('sound', (a, w) => {
     if (a.length < 2) { console.log('Error: sound - incorrect # args'); return; }
@@ -283,7 +283,7 @@ export function registerCommands(interp) {
   });
   R('play', (a, w) => {
     if (w.sim == null && w.playback == null) {
-      w.sim_init_state();
+      w.simInitState();
       w.playback = new Playback(w, a[1]);
       w.playback.run();
     }

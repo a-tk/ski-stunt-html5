@@ -166,13 +166,16 @@ export class PolygonView {
     }
 
     this.paintUnder(ctx);
-    const pts = this.data.pts;
+    const { pts } = this.data;
     const n = pts.length;
     if (n >= 2) {
       const xs = pts.map((p) => this.px(p.x));
       const ys = pts.map((p) => this.py(p.y));
       ctx.beginPath();
-      xs.forEach((x, i) => (i === 0 ? ctx.moveTo(x, ys[i]) : ctx.lineTo(x, ys[i])));
+      for (const [i, x] of xs.entries()) {
+        if (i === 0) ctx.moveTo(x, ys[i]);
+        else ctx.lineTo(x, ys[i]);
+      }
       ctx.closePath();
       ctx.fillStyle = this.fillColor();
       ctx.fill();
@@ -203,7 +206,7 @@ export class PolygonView {
     this.lastX = mx;
     this.lastY = my;
     const remove = e.shiftKey || e.button === 2;
-    const pts = this.data.pts;
+    const { pts } = this.data;
     const n = pts.length;
     // points first (so a point on a marker is still grabbable)
     for (let i = 0; i < n; i++) {

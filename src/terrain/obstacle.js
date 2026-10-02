@@ -149,15 +149,15 @@ export class Obstacle {
   resetPose() {
     if (this.fig == null) return;
     const l = this.fig.links[this.fig.root];
-    l.org_loc[0] = this.homeX;
-    l.org_loc[1] = this.homeY;
-    l.theta_loc = 0;
+    l.orgLoc[0] = this.homeX;
+    l.orgLoc[1] = this.homeY;
+    l.thetaLoc = 0;
     l.orgv[0] = 0;
     l.orgv[1] = 0;
     l.thetav = 0;
-    this.fig.convert_global();
-    this.fig.sim_init_state();
-    this.fig.sim_init();
+    this.fig.convertGlobal();
+    this.fig.simInitState();
+    this.fig.simInit();
   }
 
   /** Uses the terrain's contact stiffness/damping so objects feel like the ground. */

@@ -15,15 +15,15 @@ export class Artfig {
     this.world = world;
     this.name = null;
     this.nlinks = 0;
-    this.tag_count = 0;
+    this.tagCount = 0;
     this.root = -1;
     this.current = -1;
-    this.current_child = -1;
+    this.currentChild = -1;
     this.ndof = 0;
-    this.sim_state = null;
-    this.sim_torq = null;
-    this.sim_fext = null;
-    this.sim_ac = null;
+    this.simState = null;
+    this.simTorq = null;
+    this.simFext = null;
+    this.simAc = null;
     this.joints = null;
     this.rebuild = false;
     this.showLink = true;
@@ -32,7 +32,7 @@ export class Artfig {
     this.links = [];
     for (let i = 0; i < MAX_LINKS; i++) {
       const l = new Link();
-      l.setPool(this.links);
+      l.pool = this.links;
       this.links.push(l);
     }
     this.decorPose = null;
@@ -50,9 +50,9 @@ export class Artfig {
   // ---------------------------------------------------------------- building
 
   /** Sets a link's origin (global rest-pose coordinates). */
-  jt_org(num_, x, y) {
+  jtOrg(num_, x, y) {
     if (num_ !== -1) {
-      const l = this.links[this.find_link(num_)];
+      const l = this.links[this.findLink(num_)];
       l.org[0] = x;
       l.org[1] = y;
       this.rebuild = true;
@@ -62,92 +62,92 @@ export class Artfig {
   /** Adds the link described by the point list; it becomes a child of the current link. */
   addLink(plist) {
     ++this.nlinks;
-    ++this.tag_count;
+    ++this.tagCount;
     this.rebuild = true;
-    const idx = this.get_new_link();
+    const idx = this.getNewLink();
     const l = this.links[idx];
     l.inum = idx;
-    l.num = this.tag_count;
+    l.num = this.tagCount;
     if (this.current !== -1) {
       l.parent = this.current;
       l.theta = this.links[this.current].theta;
-      this.links[this.current].add_child(idx);
+      this.links[this.current].addChild(idx);
     } else {
       this.root = idx;
     }
     this.current = idx;
     l.plist = plist.clone();
-    const first = l.plist.getPoints()[0];
+    const first = l.plist.points[0];
     l.org[0] = first.p[0];
     l.org[1] = first.p[1];
     plist.reset();
   }
 
   mass(linkNum, m) {
-    this.build_dof();
-    this.links[this.find_link(linkNum)].update_mass(m);
+    this.buildDof();
+    this.links[this.findLink(linkNum)].updateMass(m);
   }
 
   density(linkNum, d) {
-    this.build_dof();
-    this.links[this.find_link(linkNum)].update_density(d);
+    this.buildDof();
+    this.links[this.findLink(linkNum)].updateDensity(d);
   }
 
   /** Allocates the state arrays and joints once the links are defined. */
-  build_dof() {
+  buildDof() {
     if (!this.rebuild) return;
-    this.convert_local(0);
+    this.convertLocal(0);
     this.ndof = this.nlinks + 2;
-    this.sim_state = new Float64Array(this.ndof * 2);
-    this.sim_torq = new Float64Array(this.nlinks);
-    this.sim_fext = new Float64Array(3 * this.nlinks);
-    this.sim_ac = new Float64Array(this.ndof);
+    this.simState = new Float64Array(this.ndof * 2);
+    this.simTorq = new Float64Array(this.nlinks);
+    this.simFext = new Float64Array(3 * this.nlinks);
+    this.simAc = new Float64Array(this.ndof);
     this.joints = [];
     for (let i = 0; i < this.nlinks; i++) {
       const j = new Joint();
-      j.setMouseNorm(this.world.mouseNorm);
+      j.mouseNorm = this.world.mouseNorm;
       this.joints.push(j);
     }
-    this.links[this.root].build_dof(0);
+    this.links[this.root].buildDof(0);
     this.rebuild = false;
-    this.sim_init_state();
+    this.simInitState();
   }
 
-  convert_local(reset) { this.links[this.root].convert_local(reset); }
-  convert_global() { this.links[this.root].convert_global(); }
+  convertLocal(reset) { this.links[this.root].convertLocal(reset); }
+  convertGlobal() { this.links[this.root].convertGlobal(); }
 
-  find_link(n) {
+  findLink(n) {
     for (let i = 0; i < MAX_LINKS; i++) if (this.links[i].num === n) return this.links[i].inum;
     return -1;
   }
 
-  get_new_link() {
+  getNewLink() {
     for (let i = 0; i < MAX_LINKS; i++) if (this.links[i].num === -1) return i;
     return 0;
   }
 
   numlinks() { return this.nlinks; }
-  set_current(i) { this.current = i; }
+  setCurrent(i) { this.current = i; }
   curr() { return this.current; }
-  curr_num() { return this.links[this.current].num; }
+  currNum() { return this.links[this.current].num; }
   togglelink() { this.showLink = !this.showLink; }
 
-  jt_pd(i, kp, kd, min, max, tmin, tmax) {
-    if (i >= this.nlinks) { console.log('Artfig.jt_pd(): bad link #'); return; }
+  jtPd(i, kp, kd, min, max, tmin, tmax) {
+    if (i >= this.nlinks) { console.log('Artfig.jtPd(): bad link #'); return; }
     this.joints[i].init(kp, kd, min, max, tmin, tmax);
   }
 
-  jt_pd_limit(i, kp, kd, tmin, tmax) {
+  jtPdLimit(i, kp, kd, tmin, tmax) {
     if (i < this.nlinks) this.joints[i].limit(kp, kd, tmin, tmax);
   }
 
-  jt_mousemap(i, axis, p0, p1) {
-    if (i >= this.nlinks) { console.log('Artfig.jt_set(): bad link #'); return; }
+  jtMousemap(i, axis, p0, p1) {
+    if (i >= this.nlinks) { console.log('Artfig.jtSet(): bad link #'); return; }
     this.joints[i].mousemap(axis, p0, p1);
   }
 
-  jt_set(mode, i, v, delay) {
-    if (i >= this.nlinks) { console.log('Artfig.jt_set(): bad link #'); return; }
+  jtSet(mode, i, v, delay) {
+    if (i >= this.nlinks) { console.log('Artfig.jtSet(): bad link #'); return; }
     this.joints[i].set(mode, v, delay);
   }
 
@@ -164,41 +164,41 @@ export class Artfig {
 
   // ---------------------------------------------------------------- state
 
-  sim_init_state() {
+  simInitState() {
     const r = this.links[this.root];
-    this.sim_state[0] = r.org_loc[0];
-    this.sim_state[1] = 0;
-    this.sim_state[2] = r.org_loc[1];
-    this.sim_state[3] = 0;
+    this.simState[0] = r.orgLoc[0];
+    this.simState[1] = 0;
+    this.simState[2] = r.orgLoc[1];
+    this.simState[3] = 0;
     for (let i = 2; i < this.ndof; i++) {
       const k = 2 * i;
-      this.sim_state[k] = this.links[i - 2].theta_loc * M_PI / 180;
-      this.sim_state[k + 1] = 0;
+      this.simState[k] = this.links[i - 2].thetaLoc * M_PI / 180;
+      this.simState[k + 1] = 0;
     }
   }
 
-  sim_disp_state() {
+  simDispState() {
     const r = this.links[this.root];
-    r.org_loc[0] = this.sim_state[0];
-    r.org_loc[1] = this.sim_state[2];
-    for (let i = 2; i < this.ndof; i++) this.links[i - 2].theta_loc = this.sim_state[2 * i] * 180 / M_PI;
-    this.convert_global();
+    r.orgLoc[0] = this.simState[0];
+    r.orgLoc[1] = this.simState[2];
+    for (let i = 2; i < this.ndof; i++) this.links[i - 2].thetaLoc = this.simState[2 * i] * 180 / M_PI;
+    this.convertGlobal();
   }
 
-  get_state_xy(out) { out[0] = this.sim_state[0]; out[1] = this.sim_state[2]; }
+  getStateXy(out) { out[0] = this.simState[0]; out[1] = this.simState[2]; }
 
   /** Loads a state from a 'showall' line's tokens. Returns false if the line has no state. */
-  sim_showall_state(args) {
+  simShowallState(args) {
     const n = args.length;
     let i = 1;
     if (n <= i) return false;
     if (args[i] === 'ndisp') ++i;
     if (n <= i) return false;
-    if (args[i].charAt(0) === 't') { num(args[i].substring(1)); ++i; }
+    if (args[i].charAt(0) === 't') { num(args[i].slice(1)); ++i; }
     let count = 2 * this.ndof;
     if (count > n - i) count = n - i;
     if (count < 0) return false;
-    for (let k = i; k < count + i; k++) this.sim_state[k - i] = num(args[k]);
+    for (let k = i; k < count + i; k++) this.simState[k - i] = num(args[k]);
     i += count;
     let j = 0;
     while (i <= n - 3) {
@@ -213,38 +213,38 @@ export class Artfig {
   }
 
   /** A 'showall' log line for the current state. */
-  sim_log_state(t, display = true) {
+  simLogState(t, display = true) {
     let s = 'showall ';
     if (!display) s += 'ndisp ';
     s += `t${t} `;
-    for (let i = 0; i < 2 * this.ndof; i++) s += `${this.sim_state[i]} `;
+    for (let i = 0; i < 2 * this.ndof; i++) s += `${this.simState[i]} `;
     for (let i = 0; i < this.nlinks; i++) s = this.joints[i].writeState(s);
-    this.world.log?.write(s + '\n');
+    this.world.log?.write(`${s}\n`);
   }
 
   /** Moves the figure to a rest pose: args = [x, y, angle0, angle1, ...] (angles in degrees). */
   restpose(a) {
     const r = this.links[this.root];
-    r.org_loc[0] = a[0];
-    r.org_loc[1] = a[1];
-    for (let i = 2; i < this.ndof; i++) this.links[i - 2].theta_loc = a[i];
-    this.convert_global();
+    r.orgLoc[0] = a[0];
+    r.orgLoc[1] = a[1];
+    for (let i = 2; i < this.ndof; i++) this.links[i - 2].thetaLoc = a[i];
+    this.convertGlobal();
     this.world.winview.recenter(a, this.world.winview.SETCAM);
-    this.sim_init();
-    this.sim_init_state();
+    this.simInit();
+    this.simInitState();
     for (let i = 0; i < this.nlinks; i++) this.joints[i].set('a', a[2 + i]);
   }
 
   /** Clears collision state (and resets the monitor) at the start of a run. */
-  sim_init() {
+  simInit() {
     for (let i = 0; i < this.nlinks; i++) {
-      for (const pt of this.links[i].plist.getPoints()) pt.initCollision();
+      for (const pt of this.links[i].plist.points) pt.initCollision();
     }
-    if (this.monitor) this.monitor.reset();
+    this.monitor?.reset();
   }
 
-  sim_validate_state() {
-    for (let i = 0; i < 2 * this.ndof; i++) if (Math.abs(this.sim_state[i]) > 1000000) return false;
+  simValidateState() {
+    for (let i = 0; i < 2 * this.ndof; i++) if (Math.abs(this.simState[i]) > 1000000) return false;
     return true;
   }
 
@@ -259,48 +259,48 @@ export class Artfig {
   clearExtForce() { if (this.extForceArr) this.extForceArr.fill(0); }
 
   /** One simulation step of length dt. Returns false if the state blew up. */
-  sim_step(dt) {
+  simStep(dt) {
     this.events.length = 0;
     for (const e of this.pendingEvents) this.events.push(e);
     this.pendingEvents.length = 0;
     for (let i = 0; i < this.nlinks; i++) {
       const k = 4 + 2 * i;
-      this.sim_torq[i] = this.joints[i].torque(this.sim_state[k] * RAD_TO_DEG, this.sim_state[k + 1], dt) * RAD_TO_DEG;
+      this.simTorq[i] = this.joints[i].torque(this.simState[k] * RAD_TO_DEG, this.simState[k + 1], dt) * RAD_TO_DEG;
       const f = i * 3;
-      this.sim_fext[f] = this.sim_fext[f + 1] = this.sim_fext[f + 2] = 0;
+      this.simFext[f] = this.simFext[f + 1] = this.simFext[f + 2] = 0;
     }
-    this.sim_gnd_forces(dt);
+    this.simGndForces(dt);
     if (this.extForceArr) {
-      for (let i = 0; i < this.sim_fext.length && i < this.extForceArr.length; i++) this.sim_fext[i] += this.extForceArr[i];
+      for (let i = 0; i < this.simFext.length && i < this.extForceArr.length; i++) this.simFext[i] += this.extForceArr[i];
     }
-    if (!this.sim_validate_state()) {
+    if (!this.simValidateState()) {
       console.log('Error: invalid state vector value(s)');
       return false;
     }
-    this.dyn.eval(this.sim_state, this.sim_torq, this.sim_fext, this.sim_ac);
-    this.sim_update_state(dt);
-    this.sim_disp_state();
-    if (this.monitor) this.monitor.update(dt);
+    this.dyn.eval(this.simState, this.simTorq, this.simFext, this.simAc);
+    this.simUpdateState(dt);
+    this.simDispState();
+    this.monitor?.update(dt);
     return true;
   }
 
   /** Constant-acceleration Euler step of every degree of freedom. */
-  sim_update_state(dt) {
+  simUpdateState(dt) {
     for (let i = 0; i < this.ndof; i++) {
       const k = 2 * i;
-      const v = this.sim_state[k + 1];
-      const a = this.sim_ac[i];
-      this.sim_state[k] = this.sim_state[k] + v * dt + 0.5 * a * dt * dt;
-      this.sim_state[k + 1] += a * dt;
+      const v = this.simState[k + 1];
+      const a = this.simAc[i];
+      this.simState[k] = this.simState[k] + v * dt + 0.5 * a * dt * dt;
+      this.simState[k + 1] += a * dt;
     }
-    this.links[this.root].link_velocity(this.sim_state);
+    this.links[this.root].linkVelocity(this.simState);
   }
 
   // ---------------------------------------------------------------- ground contact
 
   /** The surface (terrain or object) a point presses on: the one it already touches while still inside it, else the first containing it. */
   surfaceFor(pt) {
-    const ground = this.world.ground;
+    const { ground } = this.world;
     if (pt.cflag) {
       if (ground && ground === pt.gnd && ground.inside(pt.p)) return ground;
       for (const ob of this.world.obstacles) {
@@ -316,26 +316,26 @@ export class Artfig {
     return null;
   }
 
-  sim_gnd_forces(dt) {
+  simGndForces(dt) {
     const force = [0, 0];
     for (let li = 0; li < MAX_LINKS; li++) {
       const link = this.links[li];
       if (link.num === -1) continue;
       // skip the link unless it is near the terrain or one of the objects
       let near = false;
-      const ground = this.world.ground;
+      const { ground } = this.world;
       if (ground && ground.bboxIntersects(link.bbox)) near = true;
       for (let k = 0; k < this.world.obstacles.length && !near; k++) {
         const g = this.world.obstacles[k].ground;
         if (g && g.bboxIntersects(link.bbox)) near = true;
       }
       const skip = !!ground && !near;
-      for (const pt of link.plist.getPoints()) {
+      for (const pt of link.plist.points) {
         if (!pt.active) continue;
         const was = pt.cflag;
         let applied = 0;
         if (skip) pt.cflag = false;
-        else applied = this.sim_gnd_force(link, pt, dt, force);
+        else applied = this.simGndForce(link, pt, dt, force);
         pt.updateHist();
         if (pt.cflag !== was) {
           const e = new GroundContactEvent();
@@ -350,13 +350,13 @@ export class Artfig {
           }
           this.events.push(e);
         }
-        if (applied !== 0) link.apply_force(pt.p, force[0], force[1], this.sim_fext);
+        if (applied !== 0) link.applyForce(pt.p, force[0], force[1], this.simFext);
       }
     }
   }
 
   /** Penalty spring-damper contact for one point; fills f with the force and returns 1 if there is contact. */
-  sim_gnd_force(link, pt, dt, f) {
+  simGndForce(link, pt, dt, f) {
     const v = [0, 0];
     const px = pt.p[0];
     const py = pt.p[1];
@@ -367,14 +367,14 @@ export class Artfig {
       f[0] = f[1] = 0;
       return 0;
     }
-    link.pt_velocity(pt.ploc, v);
+    link.ptVelocity(pt.ploc, v);
     if (g !== pt.gnd) pt.cflag = false;
     if (!pt.cflag) {
       pt.gnd = g;
       const cf = [0];
       const seg = [0];
       if (!g.contactPt(last, pt.p, pt.cp, pt.cnorm, cf, seg)) {
-        console.log(`Error: unable to compute ground contact point (${this.name} at ${px}, ${py}; last ${pt.pLast == null ? 'none' : pt.pLast[0] + ', ' + pt.pLast[1]})`);
+        console.log(`Error: unable to compute ground contact point (${this.name} at ${px}, ${py}; last ${pt.pLast == null ? 'none' : `${pt.pLast[0]}, ${pt.pLast[1]}`})`);
         return 0;
       }
       pt.cfric = cf[0] + pt.bodyCFric;
@@ -422,6 +422,6 @@ export class Artfig {
       for (let i = 0; i < MAX_LINKS; i++) if (this.links[i].num !== -1) this.links[i].draw(r);
     }
     if (this.showLinkDecor) for (const d of this.linkDecors) d.draw(r);
-    if (this.monitor) this.monitor.draw(r);
+    this.monitor?.draw?.(r);
   }
 }

@@ -8,9 +8,9 @@ export class Sim {
     this.t = 0;
     this.nextDisp = 0;
     this.stopped = false;
-    this.tEnd = world.t_end;
-    this.dtSim = world.dt_sim;
-    this.dtDisp = world.dt_disp;
+    this.tEnd = world.tEnd;
+    this.dtSim = world.dtSim;
+    this.dtDisp = world.dtDisp;
     this.carry = 0;   // sim seconds owed from earlier frames
     this.pan = [0, 0];
     this.aborted = false;
@@ -20,13 +20,13 @@ export class Sim {
   init() {
     const w = this.world;
     if (w.doLogging) w.log = new TempLog();
-    w.sim_init_state();
-    w.sim_init();
+    w.simInitState();
+    w.simInit();
   }
 
   postStop() { this.stopped = true; }
 
-  /** True once the run is over (stopped, aborted or t_end reached). */
+  /** True once the run is over (stopped, aborted or tEnd reached). */
   get finished() { return this.stopped || this.aborted || !(this.t < this.tEnd); }
 
   /**
@@ -35,18 +35,18 @@ export class Sim {
    */
   stepOnce(stepCamera = true) {
     const w = this.world;
-    if (!w.sim_step(this.dtSim)) {
+    if (!w.simStep(this.dtSim)) {
       console.log('Simulation aborted.');
       this.aborted = true;
       return false;
     }
     if (this.t > this.nextDisp) {
       if (stepCamera) {
-        w.sim_get_pan(this.pan);
+        w.simGetPan(this.pan);
         w.winview.recenter(this.pan);
       }
       w.update();
-      if (w.doLogging) w.sim_log_state(this.t);
+      if (w.doLogging) w.simLogState(this.t);
       this.nextDisp += this.dtDisp;
     }
     this.t += this.dtSim;
@@ -65,13 +65,13 @@ export class Sim {
       this.carry -= this.dtSim;
     }
     if (this.t > t0) {
-      this.world.sim_get_pan(this.pan);
+      this.world.simGetPan(this.pan);
       this.world.winview.follow(this.pan, this.t - t0, this.dtDisp);
     }
     if (this.finished) this.end();
   }
 
-  /** Runs until t_end (or an abort/stop). */
+  /** Runs until tEnd (or an abort/stop). */
   runToEnd() {
     while (!this.finished) if (!this.stepOnce()) break;
     this.end();

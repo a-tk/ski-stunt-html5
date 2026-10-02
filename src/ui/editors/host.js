@@ -7,7 +7,7 @@ const stack = [];
 
 function layout() {
   const host = document.getElementById('editors');
-  stack.forEach((e, i) => { e.panel.hidden = i !== stack.length - 1; });
+  for (const [i, e] of stack.entries()) { e.panel.hidden = i !== stack.length - 1; }
   host.hidden = stack.length === 0;
   document.body.classList.toggle('editing', stack.length > 0);
 }
@@ -38,7 +38,7 @@ function closeTop(app, entry) {
     e.panel.remove();
   }
   layout();
-  const top = stack[stack.length - 1];
+  const top = stack.at(-1);
   top?.instance?.resumed?.();
   if (stack.length === 0) app?.focusGame?.();
 }
@@ -53,4 +53,4 @@ export function closeAll(app, focus = true) {
   if (focus) app?.focusGame?.();
 }
 
-export const currentEditor = () => stack[stack.length - 1]?.instance ?? null;
+export const currentEditor = () => stack.at(-1)?.instance ?? null;

@@ -138,12 +138,15 @@ class MapEditor {
       return `rgb(${Math.round(40 + 190 * t)},70,${Math.round(220 - 190 * t)})`;
     };
     v.paintUnder = (ctx) => {
-      this.settings.objects.forEach((o, i) => {
+      for (const [i, o] of this.settings.objects.entries()) {
         const poly = this.outlineOf(o);
-        if (!poly) { ctx.strokeStyle = '#e00'; ctx.beginPath(); ctx.moveTo(v.px(o.x) - 6, v.py(o.y) - 6); ctx.lineTo(v.px(o.x) + 6, v.py(o.y) + 6); ctx.moveTo(v.px(o.x) - 6, v.py(o.y) + 6); ctx.lineTo(v.px(o.x) + 6, v.py(o.y) - 6); ctx.stroke(); return; }
+        if (!poly) { ctx.strokeStyle = '#e00'; ctx.beginPath(); ctx.moveTo(v.px(o.x) - 6, v.py(o.y) - 6); ctx.lineTo(v.px(o.x) + 6, v.py(o.y) + 6); ctx.moveTo(v.px(o.x) - 6, v.py(o.y) + 6); ctx.lineTo(v.px(o.x) + 6, v.py(o.y) - 6); ctx.stroke(); continue; }
         const t = this.typeCache.get(o.type);
         ctx.beginPath();
-        poly.pts.forEach((p, k) => (k === 0 ? ctx.moveTo(v.px(p.x), v.py(p.y)) : ctx.lineTo(v.px(p.x), v.py(p.y))));
+        for (const [k, p] of poly.pts.entries()) {
+          if (k === 0) ctx.moveTo(v.px(p.x), v.py(p.y));
+          else ctx.lineTo(v.px(p.x), v.py(p.y));
+        }
         ctx.closePath();
         ctx.fillStyle = `rgb(${t.fill.join(',')})`;
         ctx.fill();
@@ -152,7 +155,7 @@ class MapEditor {
         ctx.lineWidth = selected ? 3 : 1.5;
         ctx.stroke();
         ctx.lineWidth = 1;
-      });
+      }
     };
     v.paintOver = (ctx) => {
       const s = this.settings;
@@ -409,7 +412,7 @@ class MapEditor {
   /** The height of the terrain's top surface at x, or null if there is none there. */
   surfaceY(x) {
     let best = null;
-    const pts = this.data.pts;
+    const { pts } = this.data;
     for (let i = 0; i < pts.length; i++) {
       const a = pts[i]; const b = pts[(i + 1) % pts.length];
       if (a.x !== b.x && x >= Math.min(a.x, b.x) && x <= Math.max(a.x, b.x)) {
@@ -516,7 +519,7 @@ class MapEditor {
 /** Point-in-polygon for an outline of MapData points. */
 function inside(poly, x, y) {
   let inn = false;
-  const pts = poly.pts;
+  const { pts } = poly;
   for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
     if ((pts[i].y > y) !== (pts[j].y > y) && x < (pts[j].x - pts[i].x) * (y - pts[i].y) / (pts[j].y - pts[i].y) + pts[i].x) inn = !inn;
   }

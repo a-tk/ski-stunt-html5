@@ -25,5 +25,5 @@ const objectFiles = await ls('objects');
 const demos = (await ls('animations')).filter((f) => f.endsWith('.ani')).map((f) => `animations/${f}`);
 const sounds = (await ls('sounds')).filter((f) => f.endsWith('.wav')).map((f) => `sounds/${f}`);
 
-await writeFile(path.join(assets, 'manifest.json'), JSON.stringify({ terrains, skins, objects, objectFiles, demos, sounds }, null, 1) + '\n');
+await writeFile(path.join(assets, 'manifest.json'), `${JSON.stringify({ terrains, skins, objects, objectFiles, demos, sounds }, null, 1)  }\n`);
 console.log(`manifest: ${terrains.length} terrains, ${skins.length} skins, ${objects.length} objects, ${demos.length} demos, ${sounds.length} sounds`);

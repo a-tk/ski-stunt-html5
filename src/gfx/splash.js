@@ -1,4 +1,4 @@
-// Ports of gfx/Particle.java, Splash.java and SnowSplash.java: small snow particles thrown up by contact.
+// Ports of gfx/Particle.java, Splash.java and SnowSplash.java (merged: Splash was never used on its own): small snow particles thrown up by contact.
 import { G, M_PI, frand } from '../util/math.js';
 import { num } from '../util/text.js';
 
@@ -32,7 +32,7 @@ export class Particle {
   }
 }
 
-export class Splash {
+export class SnowSplash {
   constructor(world) {
     this.world = world;
     this.horizonHeight = 0;
@@ -42,10 +42,6 @@ export class Splash {
   reset() { this.particles = []; }
   empty() { return this.particles.length === 0; }
   numParticles() { return this.particles.length; }
-
-  valid(p) { return !(p.orig[1] < this.horizonHeight); }
-
-  accel(p, out) { out[0] = 0; out[1] = G; }
 
   draw(r) { for (const p of this.particles) p.draw(r); }
 
@@ -71,9 +67,7 @@ export class Splash {
     this.particles.push(p);
     this.world.simLog(p.write('splash particle '));
   }
-}
 
-export class SnowSplash extends Splash {
   /** Throws up 'total' area of snow in particles around (x, y); see SnowEffects for the arguments. */
   setup(x, y, total, avgSize, sizeVar, speed, speedVar, angle, spread) {
     while (total > 0) {

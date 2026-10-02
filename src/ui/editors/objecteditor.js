@@ -207,7 +207,7 @@ class ObjectEditor {
   }
 
   addAfterSelected() {
-    const pts = this.type.shape.pts;
+    const { pts } = this.type.shape;
     const i = this.sel < 0 ? pts.length - 1 : this.sel;
     const a = pts[i]; const b = pts[(i + 1) % pts.length];
     this.insertPoint(i + 1, (a.x + b.x) / 2, (a.y + b.y) / 2);

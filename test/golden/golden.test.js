@@ -11,11 +11,11 @@ const golden = JSON.parse(await readFile(new URL('../fixtures/golden.json', impo
 const TOL = 1e-3;
 
 const scenarios = {
-  rest_flat: { setup: ['terrain terrain/gnd_practice.txt'], vx: 0, steps: 1500 },
-  slide_kicker: { setup: ['terrain terrain/gnd_kicker_jump.txt'], vx: 8, steps: 1500 },
-  crate_rest: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 20 0 0 1 dynamic 10'], vx: 0, steps: 1000 },
-  crate_push: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1 dynamic 10'], vx: 8, steps: 1500 },
-  static_crate: { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1'], vx: 6, steps: 1500 },
+  'rest_flat': { setup: ['terrain terrain/gnd_practice.txt'], vx: 0, steps: 1500 },
+  'slide_kicker': { setup: ['terrain terrain/gnd_kicker_jump.txt'], vx: 8, steps: 1500 },
+  'crate_rest': { setup: ['terrain terrain/gnd_practice.txt', 'object crate 20 0 0 1 dynamic 10'], vx: 0, steps: 1000 },
+  'crate_push': { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1 dynamic 10'], vx: 8, steps: 1500 },
+  'static_crate': { setup: ['terrain terrain/gnd_practice.txt', 'object crate 6 0 0 1'], vx: 6, steps: 1500 },
 };
 
 for (const [name, s] of Object.entries(scenarios)) {
@@ -24,11 +24,11 @@ for (const [name, s] of Object.entries(scenarios)) {
     const { samples, crates } = await runScenario(s.setup, s.vx, s.steps, ref.every);
     assert.equal(samples.length, ref.skier.length, 'same number of samples (no abort)');
     let worst = 0;
-    samples.forEach((sample, i) => { worst = Math.max(worst, maxDiff(sample, ref.skier[i])); });
+    for (const [i, sample] of samples.entries()) { worst = Math.max(worst, maxDiff(sample, ref.skier[i])); }
     assert.ok(worst < TOL, `skier differs from Java by up to ${worst}`);
     if (ref.crates && ref.crates[0] && ref.crates[0].length) {
       let cw = 0;
-      crates.forEach((c, i) => { if (c.length) cw = Math.max(cw, maxDiff(c[0], ref.crates[i][0])); });
+      for (const [i, c] of crates.entries()) { if (c.length) cw = Math.max(cw, maxDiff(c[0], ref.crates[i][0])); }
       assert.ok(cw < TOL, `crate differs from Java by up to ${cw}`);
     }
   });

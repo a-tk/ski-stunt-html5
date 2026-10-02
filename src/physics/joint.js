@@ -63,7 +63,6 @@ export class Joint {
     return t;
   }
 
-  setMouseNorm(norm) { this.mouseNorm = norm; }
 
   mousemap(axis, p0, p1) {
     if (axis === 'x') { this.mmap.xmap = true; this.mmap.xpos0 = p0; this.mmap.xpos1 = p1; }

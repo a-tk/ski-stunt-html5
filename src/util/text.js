@@ -11,7 +11,7 @@ export function num(s) {
   const t = String(s).trim().replace(/[fFdD]$/, '');
   const v = Number(t);
   if (t === '' || Number.isNaN(v)) {
-    if (t === 'NaN') return NaN;
+    if (t === 'NaN') return Number.NaN;
     throw new Error(`bad number: ${s}`);
   }
   return v;

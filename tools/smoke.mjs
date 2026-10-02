@@ -12,7 +12,7 @@ const ev = (e) => page.eval(e);
 await page.goto(base, 2500);
 check('page loaded', await ev('document.getElementById("loading").hidden'));
 check('3 figures', (await ev('window.skiStunt.world.artfigList.length')) === 3);
-const nTerrains = (await (await fetch(base + 'assets/manifest.json')).json()).terrains.length;
+const nTerrains = (await (await fetch(`${base}assets/manifest.json`)).json()).terrains.length;
 check('every terrain in assets/terrain is in the dropdown', (await ev('document.getElementById("sel-terrain").options.length')) === nTerrains, `${nTerrains}`);
 check('3 skins in the dropdown', (await ev('document.getElementById("sel-skin").options.length')) === 3);
 
@@ -20,7 +20,7 @@ check('3 skins in the dropdown', (await ev('document.getElementById("sel-skin").
 await page.move(700, 450);
 await page.key(' ', { code: 'Space', vk: 32 });
 await page.sleep(1500);
-const x1 = Number(await ev('window.skiStunt.world.findArtfig("skier").sim_state[0]'));
+const x1 = Number(await ev('window.skiStunt.world.findArtfig("skier").simState[0]'));
 check('run advances', (await ev('!!window.skiStunt.world.sim')) && x1 > 1, `x=${x1.toFixed(2)}`);
 await page.screenshot('/tmp/ski-smoke-run.png');
 await page.key(' ', { code: 'Space', vk: 32 });
@@ -39,8 +39,8 @@ await page.screenshot('/tmp/ski-smoke-neon.png');
 // demo
 await ev('document.getElementById("btn-demo").click()');
 await page.sleep(2500);
-check('demo started', await ev('!!window.skiStunt.world.playback || window.skiStunt.world.findArtfig("skier").sim_state[0] !== 0'));
-const moved = await ev('(() => { const s = window.skiStunt.world.findArtfig("skier").sim_state; return Math.abs(s[0]) > 0.05 || Math.abs(s[4]) > 0.1; })()');
+check('demo started', await ev('!!window.skiStunt.world.playback || window.skiStunt.world.findArtfig("skier").simState[0] !== 0'));
+const moved = await ev('(() => { const s = window.skiStunt.world.findArtfig("skier").simState; return Math.abs(s[0]) > 0.05 || Math.abs(s[4]) > 0.1; })()');
 check('demo moved the skier', moved);
 await page.screenshot('/tmp/ski-smoke-demo.png');
 await page.key(' ', { code: 'Space', vk: 32 });   // stops the demo and starts a run

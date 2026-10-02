@@ -82,7 +82,7 @@ export class LinkDecor {
     d.pose = pose;
     d.path = path;
     d.loadImage = (p) => world.loadImage(p);
-    const dir = path.substring(0, path.lastIndexOf('/') + 1);
+    const dir = path.slice(0, path.lastIndexOf('/') + 1);
     for (const line of lines(text)) {
       try {
         await d.interp(line, dir);
@@ -102,7 +102,7 @@ export class LinkDecor {
       glob[0] = this.restOrg[0] + loc[0] * this.restCth - loc[1] * this.restSth;
       glob[1] = this.restOrg[1] + loc[0] * this.restSth + loc[1] * this.restCth;
     } else {
-      this.link.loc_to_glob(loc, glob);
+      this.link.locToGlob(loc, glob);
     }
   }
 
@@ -155,7 +155,7 @@ export class LinkDecor {
     const cmd = t[0];
     if (cmd.startsWith('#')) {
       // a comment directly before start_poly names the poly
-      const text = line.trim().substring(1).trim();
+      const text = line.trim().slice(1).trim();
       this.pendingLabel = text.length > 0 ? text : null;
     } else if (cmd === 'link') this.setLink(t);
     else if (cmd === 'start_poly') this.startPoly(t);

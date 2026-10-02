@@ -24,17 +24,17 @@ export class World {
     this.plist = new PList();
     this.winview = new Winview(this);
     this.gfx2d = new Gfx2D(width, height);
-    this.winview.setGfx2D(this.gfx2d);
+    this.winview.gfx2d = this.gfx2d;
     this.winview.init(width, height, 0, 0, width / 2.35);
     this.ground = null;
     this.hotzone = null;
     this.sim = null;
-    this.syncSim = false;        // true while setup scripts run: 'simulate' then runs straight to t_end
+    this.syncSim = false;        // true while setup scripts run: 'simulate' then runs straight to tEnd
     this.bgImageName = null;
     this.clipX = 0; this.clipY = 0; this.clipW = width; this.clipH = height;
-    this.t_end = 1e20;
-    this.dt_sim = 0.02;
-    this.dt_disp = 0.002;
+    this.tEnd = 1e20;
+    this.dtSim = 0.02;
+    this.dtDisp = 0.002;
     this.mouseNorm = [0.5, 0.5];
     this.obstacles = [];
     this.bodyTouching = [];
@@ -112,47 +112,47 @@ export class World {
 
   // ---------------------------------------------------------------- simulation
 
-  sim_ready() {
+  simReady() {
     for (const f of this.artfigList) {
       if (f.dyn == null) { console.log('Error: dynamics not defined for artfig'); return false; }
     }
     return this.replay == null;
   }
 
-  sim_init_state() {
+  simInitState() {
     this.resetObjects();
-    for (const f of this.artfigList) f.sim_init_state();
+    for (const f of this.artfigList) f.simInitState();
   }
 
-  sim_init() {
+  simInit() {
     if (this.splash) this.splash.reset();
-    for (const f of this.artfigList) f.sim_init();
+    for (const f of this.artfigList) f.simInit();
   }
 
   /** One step of every active figure (after the figure-vs-object contact forces), then the particles. */
-  sim_step(dt) {
+  simStep(dt) {
     let ok = true;
     applyBodyContacts(this);
     for (const f of this.artfigList) {
-      if (f.active && !f.sim_step(dt)) { ok = false; break; }
+      if (f.active && !f.simStep(dt)) { ok = false; break; }
     }
     if (this.splash) this.splash.simStep(dt);
     return ok;
   }
 
   /** The camera target: the state position of the last pan-target figure. */
-  sim_get_pan(out) {
-    for (const f of this.artfigList) if (f.panTgt) f.get_state_xy(out);
+  simGetPan(out) {
+    for (const f of this.artfigList) if (f.panTgt) f.getStateXy(out);
   }
 
   /** Stops the run (and any replay or demo). */
   stop() {
-    this.sim_stop();
+    this.simStop();
     this.playback?.postStop();
     this.replay?.postStop();
   }
 
-  sim_stop() {
+  simStop() {
     if (this.sim) {
       this.sim.postStop();
       this.sim = null;
@@ -164,25 +164,25 @@ export class World {
   /** Appends a line (or tokens) to the run log, while a run is going. */
   simLog(x) {
     if (this.sim != null && this.log != null) {
-      const s = Array.isArray(x) ? x.join(' ') + ' ' : x;
-      this.log.write(s + '\n');
+      const s = Array.isArray(x) ? `${x.join(' ')} ` : x;
+      this.log.write(`${s}\n`);
     }
   }
 
   /** One frame of state for every active figure ('showall' lines), as in the Java log. */
-  sim_log_state(t) {
+  simLogState(t) {
     let active = 0;
     let lastActive = 0;
-    this.artfigList.forEach((f, i) => { if (f.active) { ++active; lastActive = i; } });
+    for (const [i, f] of this.artfigList.entries()) { if (f.active) { ++active; lastActive = i; } }
     const several = active > 1;
-    this.artfigList.forEach((f, i) => {
+    for (const [i, f] of this.artfigList.entries()) {
       if (several) {
         this.log.write(`world setaf ${f.name}\n`);
-        if (f.active) f.sim_log_state(t, i === lastActive);
+        if (f.active) f.simLogState(t, i === lastActive);
       } else if (f.active) {
-        f.sim_log_state(t);
+        f.simLogState(t);
       }
-    });
+    }
   }
 
   // ---------------------------------------------------------------- display
@@ -193,7 +193,7 @@ export class World {
 
   /** A promise that waits one replay frame (or nothing when frames aren't paced). */
   framePause() {
-    if (!(this.frameMs > 0)) return undefined;
+    if (!(this.frameMs > 0)) return;
     return new Promise((resolve) => setTimeout(resolve, this.frameMs));
   }
 

@@ -131,7 +131,7 @@ export async function startApp() {
     app.onSkinChanged?.();
     canvas.focus();
   });
-  const syncFrameMs = () => { world.frameMs = world.dt_disp * 1000 * (1 + world.speedLevel); };
+  const syncFrameMs = () => { world.frameMs = world.dtDisp * 1000 * (1 + world.speedLevel); };
   rngSpeed.addEventListener('input', () => { world.speedLevel = Number(rngSpeed.value); syncFrameMs(); });
   rngZoom.addEventListener('input', () => { world.winview.setZoom(Number(rngZoom.value)); dirty = true; });
   $('btn-help').addEventListener('click', () => $('help').showModal());

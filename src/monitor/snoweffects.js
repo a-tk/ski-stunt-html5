@@ -1,5 +1,4 @@
 // Port of monitor/SnowEffects.java: snow spray (and the sound) when a point hits the ground hard.
-import { ArtfigMonitor } from '../physics/monitor.js';
 import { GroundContactEvent, EventType } from '../physics/events.js';
 import { SoundAssoc } from './soundassoc.js';
 import { M_PI } from '../util/math.js';
@@ -9,9 +8,14 @@ export const Grounded = 1;
 export const Flight = 2;
 export const AvgPartSize = 0.01;
 
-export class SnowEffects extends ArtfigMonitor {
+/**
+ * A figure's monitor: watches it each step. A monitor has init(world), reset() when a run starts and
+ * update(dt) after every step; draw(r) is optional. (Any object with those will do; see Artfig.)
+ */
+export class SnowEffects {
   constructor() {
-    super();
+    this.artfig = null;
+    this.world = null;
     this.state = Unknown;
     this.soundAssoc = new SoundAssoc();
   }
@@ -20,13 +24,12 @@ export class SnowEffects extends ArtfigMonitor {
 
   reset() {
     this.state = Unknown;
-    super.reset();
   }
 
   /** Whether the contact event throws snow: amount = surface spray data * |force|^2 * 4e-10 > minArea. */
   spray(evt, minArea, out) {
     const g = evt.pt.gnd;
-    const pt = evt.pt;
+    const { pt } = evt;
     const t = g.segParam(pt.gndSegIndex, pt.cp);
     const extra = g.extraData(pt.gndSegIndex, t, 0, 0);
     const f2 = evt.cf[0] * evt.cf[0] + evt.cf[1] * evt.cf[1];
@@ -35,11 +38,11 @@ export class SnowEffects extends ArtfigMonitor {
   }
 
   update(dt) {
-    const world = this.world;
-    const splash = world.splash;
+    const { world } = this;
+    const { splash } = world;
     for (const e of this.artfig.events) {
       if (e.type !== EventType.GroundContact) continue;
-      const pt = e.pt;
+      const { pt } = e;
       if (e.state !== GroundContactEvent.AddContact) continue;
       this.state = Grounded;
       const amount = [0];
@@ -59,7 +62,7 @@ export class SnowEffects extends ArtfigMonitor {
         const spread = M_PI / 4;
         const angle = Math.atan2(dy, dx);
         const v = [0, 0];
-        this.artfig.links[e.linkNum].pt_velocity(pt.ploc, v);
+        this.artfig.links[e.linkNum].ptVelocity(pt.ploc, v);
         const speed = Math.sqrt(v[0] * v[0] + v[1] * v[1]) * speedFactor;
         const ox = pt.cp[0] - v[0] * dt;
         const oy = pt.cp[1] - v[1] * dt;
@@ -76,7 +79,8 @@ export class SnowEffects extends ArtfigMonitor {
   }
 
   init(world) {
-    super.init(world);
+    this.world = world;
+    this.artfig = world.artfig;
     let horizon = 999;
     if (world.ground != null) {
       const b = world.ground.boundingBox();

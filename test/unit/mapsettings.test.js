@@ -46,10 +46,10 @@ test('MapData text round-trips every terrain', async () => {
     const d = MapData.parse(await vfs.readText(t.file));
     const e = MapData.parse(d.toText());
     assert.equal(e.pts.length, d.pts.length, t.file);
-    d.pts.forEach((p, i) => {
+    for (const [i, p] of d.pts.entries()) {
       assert.ok(Math.abs(p.x - e.pts[i].x) < 1e-5 && Math.abs(p.y - e.pts[i].y) < 1e-5, t.file);
       assert.equal(p.cf, e.pts[i].cf);
       assert.deepEqual(p.extra, e.pts[i].extra);
-    });
+    }
   }
 });

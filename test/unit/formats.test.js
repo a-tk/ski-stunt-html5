@@ -6,7 +6,7 @@ import { assetsDir, bootWorld, diskVfs } from '../support/boot.js';
 import { Ground } from '../../src/terrain/ground.js';
 import { MapData } from '../../src/terrain/mapdata.js';
 import { ObjectType } from '../../src/terrain/objecttype.js';
-import { SkinLoader } from '../../src/art/skinloader.js';
+import { applySkin } from '../../src/art/skinloader.js';
 import { PList } from '../../src/physics/plist.js';
 import { LinkPoint } from '../../src/physics/linkpoint.js';
 
@@ -60,10 +60,10 @@ test('ski.setup builds the skier and the two ski figures', async () => {
     assert.equal(ski.nlinks, 1);
     assert.equal(ski.ndof, 3);
     assert.equal(ski.active, false);
-    assert.equal(ski.links[0].plist.getPoints().length, 27);
+    assert.equal(ski.links[0].plist.points.length, 27);
   }
   // the skier's boot points start inactive, its ski points active
-  const pts = skier.links[0].plist.getPoints();
+  const pts = skier.links[0].plist.points;
   assert.ok(pts.some((p) => p.containsTag('skiD')));
   assert.ok(w.ground.nPoints > 0);
   assert.equal(w.ground.startX, 0);
@@ -83,13 +83,13 @@ test('PList.newpt records friction and tag', () => {
   const l = new PList();
   l.newpt(1, 2, 0.4, 'x');
   assert.equal(l.npts(), 1);
-  assert.equal(l.getPoints()[0].bodyCFric, 0.4);
+  assert.equal(l.points[0].bodyCFric, 0.4);
 });
 
 test('every skin loads onto the skier and the skis', async () => {
   const w = await bootWorld();
   for (const s of manifest.skins) {
-    assert.ok(await SkinLoader.apply(w, s.dir), s.dir);
+    assert.ok(await applySkin(w, s.dir), s.dir);
     const skier = w.findArtfig('skier');
     assert.ok(skier.linkDecors.length >= 6, s.dir);
     assert.ok(skier.linkDecors.every((d) => d.polygons.length > 0));

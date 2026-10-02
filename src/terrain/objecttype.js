@@ -39,7 +39,7 @@ export class ObjectType {
       if (tok.length === 0) continue;
       try {
         const cmd = tok[0];
-        if (cmd === 'name' && tok.length > 1) t.name = line.trim().substring(4).trim();
+        if (cmd === 'name' && tok.length > 1) t.name = line.trim().slice(4).trim();
         else if (cmd === 'color') t.fill = [num(tok[1]), num(tok[2]), num(tok[3])];
         else if (cmd === 'outline') {
           t.outline = [num(tok[1]), num(tok[2]), num(tok[3])];

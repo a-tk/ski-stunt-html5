@@ -5,7 +5,7 @@
 // pushable object's outline gets a penalty spring-damper force along the outward normal of the edge
 // it entered through, plus Coulomb friction (both from the relative velocity of the point and the
 // object), and the object gets the opposite force at that point. The forces go into each figure's
-// external-force accumulator (Artfig.extForce), which sim_step folds into sim_fext.
+// external-force accumulator (Artfig.extForce), which simStep folds into simFext.
 import { MAX_LINKS } from './artfig.js';
 import { GroundContactEvent } from './events.js';
 import { Ground } from '../terrain/ground.js';
@@ -53,7 +53,7 @@ function collide(world, ob, before) {
     for (let l = 0; l < MAX_LINKS; l++) {
       const link = fig.links[l];
       if (link.num === -1 || !link.bbox.intersects(body.bbox)) continue;
-      for (const pt of link.plist.getPoints()) {
+      for (const pt of link.plist.points) {
         if (pt.active) contact(world, ob, crate, body, fig, l, link, pt, before);
       }
     }
@@ -62,7 +62,7 @@ function collide(world, ob, before) {
 
 function contact(world, ob, crate, body, fig, linkNum, link, pt, before) {
   const local = [0, 0];
-  body.glob_to_loc(pt.p, local);
+  body.globToLoc(pt.p, local);
   const n = ob.lx.length;
   if (!inside(ob.lx, ob.ly, n, local[0], local[1])) return;
 
@@ -84,15 +84,15 @@ function contact(world, ob, crate, body, fig, linkNum, link, pt, before) {
   // outline is clockwise, so the outward normal is to the left of the edge direction
   const nl = [-ey / len, ex / len];
   const nw = [0, 0];
-  body.vec_loc_to_glob(nl, nw);
+  body.vecLocToGlob(nl, nw);
   const tx = -nw[1];
   const ty = nw[0];
 
   // velocity of the point relative to the object's material at the same place
   const vp = [0, 0];
   const vb = [0, 0];
-  link.pt_velocity(pt.ploc, vp);
-  body.pt_velocity(local, vb);
+  link.ptVelocity(pt.ploc, vp);
+  body.ptVelocity(local, vb);
   const vx = vp[0] - vb[0];
   const vy = vp[1] - vb[1];
   const vn = vx * nw[0] + vy * nw[1];
@@ -114,8 +114,8 @@ function contact(world, ob, crate, body, fig, linkNum, link, pt, before) {
   const fx = fn * nw[0] + ft * tx;
   const fy = fn * nw[1] + ft * ty;
 
-  link.apply_force(pt.p, fx, fy, fig.extForce());
-  body.apply_force(pt.p, -fx, -fy, crate.extForce());
+  link.applyForce(pt.p, fx, fy, fig.extForce());
+  body.applyForce(pt.p, -fx, -fy, crate.extForce());
   report(world, ob, fig, linkNum, pt, best, nw, fx, fy, touch);
 }
 
@@ -162,7 +162,7 @@ function entryEdge(ob, body, pt, local) {
   const n = ob.lx.length;
   if (pt.pLast != null) {
     const last = [0, 0];
-    body.glob_to_loc(pt.pLast, last);
+    body.globToLoc(pt.pLast, last);
     const dx = local[0] - last[0];
     const dy = local[1] - last[1];
     let found = -1;

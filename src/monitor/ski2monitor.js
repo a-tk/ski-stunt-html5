@@ -22,7 +22,7 @@ export class Ski2Monitor extends SnowEffects {
     this.skierState = 0;
     this.applause = false;
     for (let i = 0; i < this.artfig.numlinks(); i++) {
-      for (const pt of this.artfig.links[i].plist.getPoints()) pt.active = !pt.containsTag('ia');
+      for (const pt of this.artfig.links[i].plist.points) pt.active = !pt.containsTag('ia');
     }
     const w = this.world;
     w.interp('linkDecor show lski.decor true');
@@ -38,20 +38,20 @@ export class Ski2Monitor extends SnowEffects {
   update(dt) {
     super.update(dt);
     const w = this.world;
-    if (!this.applause && this.artfig.sim_state[0] > w.ground.xApplause && this.skierState === 0) {
+    if (!this.applause && this.artfig.simState[0] > w.ground.xApplause && this.skierState === 0) {
       this.applause = true;
       w.interp('sound sounds/applause.au');
       w.simLog('sound sounds/applause.au');
     }
     for (const e of this.artfig.events) {
-      if (e.getType() !== EventType.GroundContact) continue;
-      const pt = e.pt;
+      if (e.type !== EventType.GroundContact) continue;
+      const { pt } = e;
       if (e.state !== GroundContactEvent.AddContact) continue;
       const amount = [0];
       if (this.spray(e, AvgPartSize * AvgPartSize, amount) && pt.containsTag('head')) this.skierStateTo(1);
       if (this.skiState === 0 && pt.containsTag('skiD')) {
         const local = [0, 0];
-        this.artfig.links[e.linkNum].vec_glob_to_loc(e.cf, local);
+        this.artfig.links[e.linkNum].vecGlobToLoc(e.cf, local);
         if (Math.abs(local[0]) > this.maxHorizImpactForce || local[1] < -this.maxDnImpactForce) {
           this.skiState = 1;
           this.detachSkies();
@@ -67,7 +67,7 @@ export class Ski2Monitor extends SnowEffects {
     w.interp('sound sounds/bindings.au');
     w.simLog('sound sounds/bindings.au');
     for (let i = 0; i < this.artfig.numlinks(); i++) {
-      for (const pt of this.artfig.links[i].plist.getPoints()) {
+      for (const pt of this.artfig.links[i].plist.points) {
         if (pt.containsTag('skiX')) pt.active = false;
         if (pt.containsTag('bt')) pt.active = true;
       }
@@ -85,7 +85,7 @@ export class Ski2Monitor extends SnowEffects {
     let theta = foot.theta * M_PI / 180;
     const omega = foot.thetav;
     const args = ['showall', String(x), String(vx), String(y), String(vy), String(theta), String(omega), '0', '0', '0'];
-    right.sim_showall_state(args);
+    right.simShowallState(args);
     w.interp('world setaf dlski');
     w.interp('artfig active true');
     const left = w.findArtfig('dlski');
@@ -95,7 +95,7 @@ export class Ski2Monitor extends SnowEffects {
     while (Math.abs(off) < minDeg) off = frand(-maxDeg, maxDeg);
     theta += off * M_PI / 180;
     args[5] = String(theta);
-    left.sim_showall_state(args);
+    left.simShowallState(args);
     w.interp('world setaf skier');
   }
 
@@ -107,9 +107,7 @@ export class Ski2Monitor extends SnowEffects {
   skierStateTo(s) {
     if (s === 0) {
       if (this.skierState === 1 && this.skierNormProc != null) this.world.interp(`< ${this.skierNormProc}`);
-    } else if (s === 1) {
-      if (this.skierState === 0 && this.skierRelaxProc != null) this.world.interp(`< ${this.skierRelaxProc}`);
-    }
+    } else if (s === 1 && this.skierState === 0 && this.skierRelaxProc != null) this.world.interp(`< ${this.skierRelaxProc}`);
     this.skierState = s;
   }
 }

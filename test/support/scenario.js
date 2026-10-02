@@ -22,18 +22,18 @@ async function run(setup, skierVx, steps, every) {
   world.stop();
   for (const c of setup) await world.interp(c);
   await world.interp('< config/reset.cb');
-  world.sim_init_state();
-  world.sim_init();
+  world.simInitState();
+  world.simInit();
   const skier = world.findArtfig('skier');
-  if (skierVx) skier.sim_state[1] = skierVx;
+  if (skierVx) skier.simState[1] = skierVx;
   const samples = [];
   const crates = [];
   for (let i = 0; i <= steps; i++) {
     if (i % every === 0) {
-      samples.push(Array.from(skier.sim_state));
-      crates.push(world.obstacles.filter((o) => o.dynamic).map((o) => Array.from(o.fig.sim_state)));
+      samples.push(Array.from(skier.simState));
+      crates.push(world.obstacles.filter((o) => o.dynamic).map((o) => Array.from(o.fig.simState)));
     }
-    if (i < steps && !world.sim_step(0.002)) { samples.push('ABORTED'); break; }
+    if (i < steps && !world.simStep(0.002)) { samples.push('ABORTED'); break; }
   }
   return { world, samples, crates };
 }

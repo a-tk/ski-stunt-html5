@@ -31,29 +31,27 @@ export async function listSkins(vfs) {
 /** The 'name' in a skin's manifest, or the directory name. */
 export async function skinDisplayName(vfs, skin) {
   const ls = await readLines(vfs, `${SKINS_DIR}${skin}/skin.txt`);
-  for (const l of ls ?? []) if (l.startsWith('name ')) return l.substring(5).trim();
+  for (const l of ls ?? []) if (l.startsWith('name ')) return l.slice(5).trim();
   return skin;
 }
 
-export class SkinLoader {
-  /** Replaces the decors on the skier and ski figures with those of the named skin. */
-  static async apply(world, skin) {
-    const dir = `${SKINS_DIR}${skin}/`;
-    const ls = await readLines(world.vfs, `${dir}skin.txt`);
-    if (ls == null) { console.log(`Error: unable to read skin ${skin}`); return false; }
-    const skier = world.findArtfig(SKIER);
-    const oldShow = new Map();
-    for (const f of [skier, ...SKI_FIGS.map((n) => world.findArtfig(n))]) clear(f, oldShow);
-    for (const line of ls) {
-      const t = tokens(line);
-      if (t[0] === 'poly' && t.length > 1) {
-        await load(world, skier, dir + t[1], t[2] ?? null, oldShow);
-      } else if (t[0] === 'ski' && t.length > 1) {
-        for (const n of SKI_FIGS) await load(world, world.findArtfig(n), dir + t[1], null, oldShow);
-      }
+/** Replaces the decors on the skier and ski figures with those of the named skin. */
+export async function applySkin(world, skin) {
+  const dir = `${SKINS_DIR}${skin}/`;
+  const ls = await readLines(world.vfs, `${dir}skin.txt`);
+  if (ls == null) { console.log(`Error: unable to read skin ${skin}`); return false; }
+  const skier = world.findArtfig(SKIER);
+  const oldShow = new Map();
+  for (const f of [skier, ...SKI_FIGS.map((n) => world.findArtfig(n))]) clear(f, oldShow);
+  for (const line of ls) {
+    const t = tokens(line);
+    if (t[0] === 'poly' && t.length > 1) {
+      await load(world, skier, dir + t[1], t[2] ?? null, oldShow);
+    } else if (t[0] === 'ski' && t.length > 1) {
+      for (const n of SKI_FIGS) await load(world, world.findArtfig(n), dir + t[1], null, oldShow);
     }
-    return true;
   }
+  return true;
 }
 
 /** Removes all decors from a figure, remembering each named decor's visibility. */
@@ -69,8 +67,8 @@ async function load(world, fig, path, decorName, oldShow) {
   const decor = await LinkDecor.load(path, world, fig.links, fig.decorPose);
   if (!decor) { console.log(`Error: unable to init link decor ${path}`); return; }
   if (decorName != null) {
-    decor.name = decorName;
-    if (oldShow.has(decorName)) decor.show = oldShow.get(decorName);
-  }
+  decor.name = decorName;
+  if (oldShow.has(decorName)) decor.show = oldShow.get(decorName);
+}
   fig.linkDecors.push(decor);
 }

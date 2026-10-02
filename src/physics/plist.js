@@ -15,6 +15,5 @@ export class PList {
     this.points.push(p);
     return 0;
   }
-  getPoints() { return this.points; }
   clone() { const c = new PList(); c.points = this.points.slice(); return c; }
 }

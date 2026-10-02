@@ -15,8 +15,8 @@ export class ContextRenderer {
   path(xs, ys) {
     const { ctx } = this;
     ctx.beginPath();
-    for (let i = 0; i < xs.length; i++) {
-      const px = this.toX(xs[i]);
+    for (const [i, x] of xs.entries()) {
+      const px = this.toX(x);
       const py = this.toY(ys[i]);
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }

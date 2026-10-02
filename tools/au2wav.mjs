@@ -21,9 +21,9 @@ export function auToWav(buf) {
   if (enc === 1) { samples = new Int16Array(size); for (let i = 0; i < size; i++) samples[i] = ulaw(buf[offset + i]); }
   else if (enc === 2) { samples = new Int16Array(size); for (let i = 0; i < size; i++) samples[i] = (buf.readInt8(offset + i)) << 8; }
   else if (enc === 3) { samples = new Int16Array(size >> 1); for (let i = 0; i < samples.length; i++) samples[i] = buf.readInt16BE(offset + 2 * i); }
-  else throw new Error('unsupported .au encoding ' + enc);
+  else throw new Error(`unsupported .au encoding ${enc}`);
   const data = Buffer.alloc(samples.length * 2);
-  samples.forEach((v, i) => data.writeInt16LE(v, i * 2));
+  for (const [i, v] of samples.entries()) data.writeInt16LE(v, i * 2);
   const h = Buffer.alloc(44);
   h.write('RIFF', 0); h.writeUInt32LE(36 + data.length, 4); h.write('WAVEfmt ', 8);
   h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(ch, 22); h.writeUInt32LE(rate, 24);

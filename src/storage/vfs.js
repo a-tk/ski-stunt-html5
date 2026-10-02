@@ -9,7 +9,7 @@ export class Vfs {
    * @param {(path: string) => Promise<Uint8Array|null>} [opts.loader] replaces fetch (used by tests)
    */
   constructor({ base = 'assets/', loader = null } = {}) {
-    this.base = base.endsWith('/') ? base : base + '/';
+    this.base = base.endsWith('/') ? base : `${base}/`;
     this.loader = loader;
     this.overlay = new Map();   // path -> Uint8Array (user-made or edited files)
     this.cache = new Map();     // path -> string | null (text read so far; null = not found)
