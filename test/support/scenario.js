@@ -1,7 +1,23 @@
 // Runs a golden scenario in the JS engine the same way tools/java-golden/Golden.java does.
 import { bootWorld } from './boot.js';
 
+// When the skis come off (crate_push), Ski2Monitor turns the left ski by a random 5-20 degrees, either way
+// (Util.frand). Turned one way it catches the crate and changes the run; the other way it doesn't. The Java
+// reference was recorded with the second, so pin the random numbers to a value that gives it (frand(-20, 20)
+// at 0.25 is +10 degrees); otherwise the test passes or fails by chance.
+const PINNED_RANDOM = 0.25;
+
 export async function runScenario(setup, skierVx, steps, every) {
+  const realRandom = Math.random;
+  Math.random = () => PINNED_RANDOM;
+  try {
+    return await run(setup, skierVx, steps, every);
+  } finally {
+    Math.random = realRandom;
+  }
+}
+
+async function run(setup, skierVx, steps, every) {
   const world = await bootWorld();
   world.stop();
   for (const c of setup) await world.interp(c);

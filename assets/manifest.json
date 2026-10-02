@@ -5,19 +5,7 @@
    "map": false
   },
   {
-   "file": "terrain/gnd_camelSnowman.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_camelTrees.txt",
-   "map": false
-  },
-  {
    "file": "terrain/gnd_crash_burn.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_deathValley.txt",
    "map": false
   },
   {
@@ -29,19 +17,7 @@
    "map": false
   },
   {
-   "file": "terrain/gnd_jump.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_jump3.txt",
-   "map": false
-  },
-  {
    "file": "terrain/gnd_kicker_jump.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_lessonPrep.txt",
    "map": false
   },
   {
@@ -54,10 +30,6 @@
   },
   {
    "file": "terrain/gnd_road.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_ted.txt",
    "map": false
   },
   {
