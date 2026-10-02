@@ -72,3 +72,4 @@ doubles where Java uses floats, so long runs diverge (the physics is chaotic).
 - Not ported (no shipped file uses them): the `billboard`, `show`, `anidump`, `showlog` and `world ls`
   commands and `linkDecor load/setname`. Everything the shipped scripts, maps, skins and demos use is
   supported (`src/script/commands.js` lists the commands).
+
