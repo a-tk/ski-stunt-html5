@@ -1,6 +1,6 @@
 // Port of ui/Hotzone.java: the square on screen whose mouse position steers the skier.
 // Coordinates are in pixels of the game canvas; y is measured up from the bottom.
-const ZONE_FRACTION = 0.6;   // the steering square's side, as a fraction of the canvas's shorter side
+const ZONE_FRACTION = 0.5;   // the steering square's side, as a fraction of the canvas's shorter side
 
 export class Hotzone {
   constructor(width = 0, height = 0) {
