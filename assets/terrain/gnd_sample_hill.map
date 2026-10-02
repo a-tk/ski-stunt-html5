@@ -1,3 +1,0 @@
-# per-map settings, run after terrain/gnd_setup.txt
-gnd xApplause 100
-gnd start -40 1

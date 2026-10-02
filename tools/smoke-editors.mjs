@@ -47,7 +47,7 @@ const z1 = await ev('zipInfo(window.__downloads[0])');
 check('map zip is a zip with both files', z1.pk && z1.text.includes('terrain/gnd_tmap.txt') && z1.text.includes('terrain/gnd_tmap.map'), `${z1.size} bytes`);
 
 // built-in maps are read-only
-await ev('(async () => { const s = document.getElementById("sel-terrain"); s.value = "terrain/gnd_practise.txt"; s.dispatchEvent(new Event("change")); })()');
+await ev('(async () => { const s = document.getElementById("sel-terrain"); s.value = "terrain/gnd_kicker_jump.txt"; s.dispatchEvent(new Event("change")); })()');
 await page.sleep(1000);
 await ev('btn("Save").click()');
 check('built-in map refuses Save', (await ev('document.querySelector("#editors .editor-panel:not([hidden]) .status").textContent')).includes('read-only'));

@@ -12,7 +12,8 @@ const ev = (e) => page.eval(e);
 await page.goto(base, 2500);
 check('page loaded', await ev('document.getElementById("loading").hidden'));
 check('3 figures', (await ev('window.skiStunt.world.artfigList.length')) === 3);
-check('30 terrains in the dropdown', (await ev('document.getElementById("sel-terrain").options.length')) === 30);
+const nTerrains = (await (await fetch(base + 'assets/manifest.json')).json()).terrains.length;
+check('every terrain in assets/terrain is in the dropdown', (await ev('document.getElementById("sel-terrain").options.length')) === nTerrains, `${nTerrains}`);
 check('3 skins in the dropdown', (await ev('document.getElementById("sel-skin").options.length')) === 3);
 
 // a run
@@ -26,10 +27,10 @@ await page.key(' ', { code: 'Space', vk: 32 });
 check('space stops the run', !(await ev('!!window.skiStunt.world.sim')));
 
 // terrain and skin
-await ev('(async () => { const s = document.getElementById("sel-terrain"); s.value = "terrain/gnd_practise.txt"; s.dispatchEvent(new Event("change")); })()');
+await ev('(async () => { const s = document.getElementById("sel-terrain"); s.value = "terrain/gnd_kicker_jump.txt"; s.dispatchEvent(new Event("change")); })()');
 await page.sleep(800);
-check('terrain switched', (await ev('window.skiStunt.currentTerrain')) === 'terrain/gnd_practise.txt');
-check('demo enabled for practise', !(await ev('document.getElementById("btn-demo").disabled')));
+check('terrain switched', (await ev('window.skiStunt.currentTerrain')) === 'terrain/gnd_kicker_jump.txt');
+check('demo enabled for kicker jump', !(await ev('document.getElementById("btn-demo").disabled')));
 await ev('(async () => { const s = document.getElementById("sel-skin"); s.value = "neon"; s.dispatchEvent(new Event("change")); })()');
 await page.sleep(800);
 check('skin switched', (await ev('window.skiStunt.world.findArtfig("skier").linkDecors.length')) >= 6);

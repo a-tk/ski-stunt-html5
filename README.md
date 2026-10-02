@@ -33,7 +33,8 @@ game as you make them. Everything you make lives **only in the browser tab's mem
 loses it (the page warns first). Each editor has a **Download…** button that saves your work as a zip with
 the same file layout as the Java version (unzip it into the game's `assets/` folder, or the Java repo's
 resource folders, to keep using it). There is no import: to use a download again, unzip it into `assets/`
-and run `npm run manifest` so the new terrain/skin/object shows up in the lists.
+and the new terrain/skin/object shows up in the lists (`npm start` and the Pages deploy both regenerate
+`assets/manifest.json` from the folders; run `npm run manifest` yourself if you use another server).
 
 Built-in maps and skins are read-only (use **Save As** to make a copy). Textures are not set in the skin
 editor; a skin keeps the `texture` lines of its `.poly` files.

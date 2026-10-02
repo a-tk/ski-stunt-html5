@@ -23,6 +23,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: List assets/ in manifest.json (a static host can't list directories)
+        run: node tools/make-manifest.mjs
       - name: Collect the files the page loads
         run: |
           mkdir _site

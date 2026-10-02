@@ -5,7 +5,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node tools/serve.mjs",
+    "start": "node tools/make-manifest.mjs && node tools/serve.mjs",
     "test": "node --test \"test/**/*.test.js\"",
     "manifest": "node tools/make-manifest.mjs",
     "import-assets": "bash tools/import-assets.sh",

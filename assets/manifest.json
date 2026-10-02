@@ -21,27 +21,7 @@
    "map": false
   },
   {
-   "file": "terrain/gnd_exercise1.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_exercise2.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_exercise3.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_exercise4.txt",
-   "map": false
-  },
-  {
    "file": "terrain/gnd_gap.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_gapCrumbleShell.txt",
    "map": false
   },
   {
@@ -61,22 +41,6 @@
    "map": false
   },
   {
-   "file": "terrain/gnd_lesson1.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_lesson2.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_lesson3.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_lesson4.txt",
-   "map": false
-  },
-  {
    "file": "terrain/gnd_lessonPrep.txt",
    "map": false
   },
@@ -85,32 +49,12 @@
    "map": false
   },
   {
-   "file": "terrain/gnd_practise.txt",
-   "map": false
-  },
-  {
    "file": "terrain/gnd_ravine.txt",
-   "map": false
-  },
-  {
-   "file": "terrain/gnd_ravineJet.txt",
    "map": false
   },
   {
    "file": "terrain/gnd_road.txt",
    "map": false
-  },
-  {
-   "file": "terrain/gnd_sample_crates.txt",
-   "map": true
-  },
-  {
-   "file": "terrain/gnd_sample_hill.txt",
-   "map": true
-  },
-  {
-   "file": "terrain/gnd_sample_pushcrates.txt",
-   "map": true
   },
   {
    "file": "terrain/gnd_ted.txt",

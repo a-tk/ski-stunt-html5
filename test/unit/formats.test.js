@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { assetsDir, bootWorld, diskVfs } from '../support/boot.js';
 import { Ground } from '../../src/terrain/ground.js';
@@ -12,8 +12,9 @@ import { LinkPoint } from '../../src/physics/linkpoint.js';
 
 const manifest = JSON.parse(await readFile(path.join(assetsDir, 'manifest.json'), 'utf8'));
 
-test('manifest lists the shipped content', () => {
-  assert.equal(manifest.terrains.length, 30);
+test('manifest lists the shipped content', async () => {
+  const onDisk = (await readdir(path.join(assetsDir, 'terrain'))).filter((f) => /^gnd_.*\.txt$/.test(f) && f !== 'gnd_setup.txt');
+  assert.deepEqual(manifest.terrains.map((t) => t.file).sort(), onDisk.map((f) => `terrain/${f}`).sort(), 'run npm run manifest');
   assert.deepEqual(manifest.skins.map((s) => s.dir).sort(), ['default', 'girl_skier', 'neon']);
   assert.deepEqual(manifest.objects, ['barrier', 'crate', 'ramp']);
   assert.equal(manifest.demos.length, 4);

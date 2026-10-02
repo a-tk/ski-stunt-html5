@@ -9,15 +9,15 @@ import { openMapEditor } from './editors/mapeditor.js';
 import { openObjectEditor } from './editors/objecteditor.js';
 import { openSkinEditor } from './editors/skineditor.js';
 
-/** The terrains with their labels, in the original dropdown order; the four with demos name them. */
-const TERRAINS = [
+/**
+ * Labels and demos for the terrains that have them. The dropdown itself lists whatever assets/manifest.json
+ * says is in assets/terrain/ (these just come first, in the original order, with these names).
+ */
+const TERRAIN_INFO = [
   ['kicker jump', 'terrain/gnd_kicker_jump.txt', 'animations/demo_kicker.ani'],
   ['crash & burn', 'terrain/gnd_crash_burn.txt', 'animations/demo_crash_burn.ani'],
   ['the wall', 'terrain/gnd_the_wall.txt', 'animations/demo_the_wall.ani'],
   ['practise', 'terrain/gnd_practise.txt', 'animations/demo_practise.ani'],
-  ...['camelCrates', 'camelSnowman', 'camelTrees', 'deathValley', 'exercise1', 'exercise2', 'exercise3', 'exercise4', 'gap',
-    'gapCrumbleShell', 'hutRock', 'jump', 'jump3', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lessonPrep', 'practice',
-    'ravine', 'ravineJet', 'road', 'ted'].map((n) => [n, `terrain/gnd_${n}.txt`, null]),
 ];
 
 const MARGIN = 0.05;
@@ -58,7 +58,14 @@ export async function startApp() {
   }
   $('loading').hidden = true;
 
-  const app = { vfs, world, audio, renderer, requestRedraw, currentTerrain: TERRAINS[0][1], currentSkin: 'default', demoFile: TERRAINS[0][2] };
+  const manifest = await vfs.manifest();
+  const onDisk = new Set(manifest.terrains.map((t) => t.file));
+  const terrains = TERRAIN_INFO.filter((t) => onDisk.has(t[1]));
+  const known = new Set(terrains.map((t) => t[1]));
+  for (const t of manifest.terrains) {
+    if (!known.has(t.file)) terrains.push([t.file.replace(/^terrain\/gnd_/, '').replace(/\.txt$/, ''), t.file, null]);
+  }
+  const app = { vfs, world, audio, renderer, requestRedraw, currentTerrain: terrains[0]?.[1], currentSkin: 'default', demoFile: terrains[0]?.[2] ?? null };
   window.skiStunt = app; // handy for debugging in the console
 
   // ---------------------------------------------------------------- controls
@@ -68,12 +75,6 @@ export async function startApp() {
   const rngSpeed = $('rng-speed');
   const rngZoom = $('rng-zoom');
 
-  const manifest = await vfs.manifest();
-  const known = new Set(TERRAINS.map((t) => t[1]));
-  const terrains = [...TERRAINS];
-  for (const t of manifest.terrains) {
-    if (!known.has(t.file)) terrains.push([t.file.replace(/^terrain\/gnd_/, '').replace(/\.txt$/, ''), t.file, null]);
-  }
   const fillTerrains = () => {
     selTerrain.replaceChildren(...terrains.map(([label, file]) => Object.assign(document.createElement('option'), { textContent: label, value: file })));
     selTerrain.value = app.currentTerrain;
