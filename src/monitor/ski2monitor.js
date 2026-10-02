@@ -1,6 +1,6 @@
 // Port of monitor/Ski2Monitor.java: the skier's crash handling. A head hit relaxes the joints; a hard
 // impact on a ski binding point detaches the skis; applause past the finish line.
-import { SnowEffects, AvgPartSize } from './snoweffects.js';
+import { SnowEffects, MinSprayArea } from './snoweffects.js';
 import { GroundContactEvent, EventType } from '../physics/events.js';
 import { frand, M_PI } from '../util/math.js';
 
@@ -47,8 +47,7 @@ export class Ski2Monitor extends SnowEffects {
       if (e.type !== EventType.GroundContact) continue;
       const { pt } = e;
       if (e.state !== GroundContactEvent.AddContact) continue;
-      const amount = [0];
-      if (this.spray(e, AvgPartSize * AvgPartSize, amount) && pt.containsTag('head')) this.skierStateTo(1);
+      if (this.sprayAmount(e) > MinSprayArea && pt.containsTag('head')) this.skierStateTo(1);
       if (this.skiState === 0 && pt.containsTag('skiD')) {
         const local = [0, 0];
         this.artfig.links[e.linkNum].vecGlobToLoc(e.cf, local);

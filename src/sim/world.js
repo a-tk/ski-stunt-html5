@@ -140,9 +140,10 @@ export class World {
     return ok;
   }
 
-  /** The camera target: the state position of the last pan-target figure. */
-  simGetPan(out) {
-    for (const f of this.artfigList) if (f.panTgt) f.getStateXy(out);
+  /** The camera target [x, y]: the state position of the last pan-target figure, or null if none is. */
+  simGetPan() {
+    const target = this.artfigList.findLast((f) => f.panTgt);
+    return target ? target.getStateXy() : null;
   }
 
   /** Stops the run (and any replay or demo). */

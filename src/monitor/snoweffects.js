@@ -7,6 +7,7 @@ export const Unknown = 0;
 export const Grounded = 1;
 export const Flight = 2;
 export const AvgPartSize = 0.01;
+export const MinSprayArea = AvgPartSize * AvgPartSize;
 
 /**
  * A figure's monitor: watches it each step. A monitor has init(world), reset() when a run starts and
@@ -26,15 +27,14 @@ export class SnowEffects {
     this.state = Unknown;
   }
 
-  /** Whether the contact event throws snow: amount = surface spray data * |force|^2 * 4e-10 > minArea. */
-  spray(evt, minArea, out) {
+  /** How much snow a contact event throws: surface spray data * |force|^2 * 4e-10 (it sprays if > MinSprayArea). */
+  sprayAmount(evt) {
     const g = evt.pt.gnd;
     const { pt } = evt;
     const t = g.segParam(pt.gndSegIndex, pt.cp);
     const extra = g.extraData(pt.gndSegIndex, t, 0, 0);
     const f2 = evt.cf[0] * evt.cf[0] + evt.cf[1] * evt.cf[1];
-    out[0] = extra * f2 * 4.0e-10;
-    return out[0] > minArea;
+    return extra * f2 * 4.0e-10;
   }
 
   update(dt) {
@@ -45,10 +45,10 @@ export class SnowEffects {
       const { pt } = e;
       if (e.state !== GroundContactEvent.AddContact) continue;
       this.state = Grounded;
-      const amount = [0];
-      if (!this.spray(e, AvgPartSize * AvgPartSize, amount)) continue;
+      const amount = this.sprayAmount(e);
+      if (!(amount > MinSprayArea)) continue;
       if (splash) {
-        const total = Math.sqrt(amount[0] * 3);
+        const total = Math.sqrt(amount * 3);
         const speedFactor = 0.8;
         const speedVar = 0.1;
         // split the contact force into its normal and tangential parts

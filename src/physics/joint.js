@@ -11,7 +11,6 @@ export class Joint {
     this.tmin = -100; this.tmax = 100;
     this.limTSet = false; this.limKp = 0; this.limKd = 0; this.limTmin = 0; this.limTmax = 0;
     this.futureAngle = 0; this.timeDelay = 0;
-    this.mouseNorm = [0.5, 0.5];
   }
 
   set(mode, value, delay = 0) {
@@ -24,10 +23,9 @@ export class Joint {
     }
   }
 
-  /** Joint torque for angle (deg), angular velocity and the step length dt. */
-  torque(angle, vel, dt) {
-    const nx = this.mouseNorm[0];
-    const ny = this.mouseNorm[1];
+  /** Joint torque for angle (deg), angular velocity, the step length dt and the mouse position [x, y] in 0..1. */
+  torque(angle, vel, dt, mouse) {
+    const [nx, ny] = mouse;
     if (this.mmap.xmap || this.mmap.ymap) this.setval = 0;
     if (this.mmap.xmap) this.setval += this.mmap.xpos0 + nx * (this.mmap.xpos1 - this.mmap.xpos0);
     if (this.mmap.ymap) this.setval += this.mmap.ypos0 + ny * (this.mmap.ypos1 - this.mmap.ypos0);

@@ -30,10 +30,9 @@ export class Hotzone {
     this.dy = y2 - y1;
   }
 
-  /** Mouse position (px, py from the top left) -> normalized (0..1 inside the zone, unclamped). */
-  normalize(px, py, out) {
-    out[0] = (px - this.x1) / this.dx;
-    out[1] = (this.height - py - this.y1) / this.dy;
+  /** Mouse position (px, py from the top left) -> [x, y] normalized (0..1 inside the zone, unclamped). */
+  normalize(px, py) {
+    return [(px - this.x1) / this.dx, (this.height - py - this.y1) / this.dy];
   }
 
   /**

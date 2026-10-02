@@ -160,14 +160,14 @@ export async function startApp() {
     world.interp('simulate stop');
     world.interp('restpose start');
     // the steering zone is fixed on screen, so the run starts with whatever the pointer is already doing
-    if (world.hotzone && lastMouse) world.hotzone.normalize(lastMouse[0], lastMouse[1], world.mouseNorm);
+    if (world.hotzone && lastMouse) world.mouseNorm = world.hotzone.normalize(lastMouse[0], lastMouse[1]);
     world.interp('simulate');
   };
 
   let lastMouse = null;
   canvas.addEventListener('pointermove', (e) => {
     lastMouse = [e.offsetX, e.offsetY];
-    if (world.sim != null && world.hotzone) world.hotzone.normalize(e.offsetX, e.offsetY, world.mouseNorm);
+    if (world.sim != null && world.hotzone) world.mouseNorm = world.hotzone.normalize(e.offsetX, e.offsetY);
   });
   const unlockAudio = () => audio.unlock();
   addEventListener('pointerdown', unlockAudio);

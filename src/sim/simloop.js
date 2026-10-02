@@ -12,7 +12,6 @@ export class Sim {
     this.dtSim = world.dtSim;
     this.dtDisp = world.dtDisp;
     this.carry = 0;   // sim seconds owed from earlier frames
-    this.pan = [0, 0];
     this.aborted = false;
   }
 
@@ -42,8 +41,8 @@ export class Sim {
     }
     if (this.t > this.nextDisp) {
       if (stepCamera) {
-        w.simGetPan(this.pan);
-        w.winview.recenter(this.pan);
+        const pan = w.simGetPan();
+        if (pan) w.winview.recenter(pan);
       }
       w.update();
       if (w.doLogging) w.simLogState(this.t);
@@ -65,8 +64,8 @@ export class Sim {
       this.carry -= this.dtSim;
     }
     if (this.t > t0) {
-      this.world.simGetPan(this.pan);
-      this.world.winview.follow(this.pan, this.t - t0, this.dtDisp);
+      const pan = this.world.simGetPan();
+      if (pan) this.world.winview.follow(pan, this.t - t0, this.dtDisp);
     }
     if (this.finished) this.end();
   }

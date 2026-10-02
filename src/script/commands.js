@@ -262,9 +262,8 @@ export function registerCommands(interp) {
     if (w.artfig.simShowallState(a)) {
       w.artfig.simDispState();
       if (display) {
-        const pan = [0, 0];
-        w.simGetPan(pan);
-        w.winview.recenter(pan);
+        const pan = w.simGetPan();
+        if (pan) w.winview.recenter(pan);
         w.update();
         return w.framePause();
       }

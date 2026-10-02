@@ -104,9 +104,7 @@ export class Artfig {
     this.simAc = new Float64Array(this.ndof);
     this.joints = [];
     for (let i = 0; i < this.nlinks; i++) {
-      const j = new Joint();
-      j.mouseNorm = this.world.mouseNorm;
-      this.joints.push(j);
+      this.joints.push(new Joint());
     }
     this.links[this.root].buildDof(0);
     this.rebuild = false;
@@ -185,7 +183,7 @@ export class Artfig {
     this.convertGlobal();
   }
 
-  getStateXy(out) { out[0] = this.simState[0]; out[1] = this.simState[2]; }
+  getStateXy() { return [this.simState[0], this.simState[2]]; }
 
   /** Loads a state from a 'showall' line's tokens. Returns false if the line has no state. */
   simShowallState(args) {
@@ -265,7 +263,7 @@ export class Artfig {
     this.pendingEvents.length = 0;
     for (let i = 0; i < this.nlinks; i++) {
       const k = 4 + 2 * i;
-      this.simTorq[i] = this.joints[i].torque(this.simState[k] * RAD_TO_DEG, this.simState[k + 1], dt) * RAD_TO_DEG;
+      this.simTorq[i] = this.joints[i].torque(this.simState[k] * RAD_TO_DEG, this.simState[k + 1], dt, this.world.mouseNorm) * RAD_TO_DEG;
       const f = i * 3;
       this.simFext[f] = this.simFext[f + 1] = this.simFext[f + 2] = 0;
     }
