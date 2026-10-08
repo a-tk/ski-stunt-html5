@@ -74,6 +74,7 @@ export async function startApp() {
   const btnDemo = $('btn-demo');
   const rngSpeed = $('rng-speed');
   const rngZoom = $('rng-zoom');
+  const rngVolume = $('rng-volume');
 
   const fillTerrains = () => {
     selTerrain.replaceChildren(...terrains.map(([label, file]) => Object.assign(document.createElement('option'), { textContent: label, value: file })));
@@ -134,6 +135,18 @@ export async function startApp() {
   const syncFrameMs = () => { world.frameMs = world.dtDisp * 1000 * (1 + world.speedLevel); };
   rngSpeed.addEventListener('input', () => { world.speedLevel = Number(rngSpeed.value); syncFrameMs(); });
   rngZoom.addEventListener('input', () => { world.winview.setZoom(Number(rngZoom.value)); dirty = true; });
+  // the volume is the one setting worth remembering between visits (storage can be blocked, so it's optional)
+  const VOLUME_KEY = 'skiStunt.volume';
+  try {
+    const saved = localStorage.getItem(VOLUME_KEY);
+    if (saved != null && !Number.isNaN(Number(saved))) rngVolume.value = saved;
+  } catch { /* no storage: start at the default */ }
+  audio.setVolume(Number(rngVolume.value) / 100);
+  rngVolume.addEventListener('input', () => {
+    audio.setVolume(Number(rngVolume.value) / 100);
+    try { localStorage.setItem(VOLUME_KEY, rngVolume.value); } catch { /* not remembered */ }
+  });
+  rngVolume.addEventListener('change', () => canvas.focus());   // so Space and the arrow keys go back to the game
   $('btn-help').addEventListener('click', () => $('help').showModal());
   $('btn-replay').addEventListener('click', () => {
     world.stop();

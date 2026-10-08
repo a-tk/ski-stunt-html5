@@ -10,7 +10,8 @@ html, body { height: 100%; margin: 0; }
 body { display: flex; flex-direction: column; background: var(--bg); color: var(--fg); font: 14px/1.3 system-ui, sans-serif; }
 #bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 6px 10px; background: var(--bar); border-bottom: 1px solid var(--line); }
 #bar label { display: inline-flex; align-items: center; gap: 6px; }
-#bar .slider input { width: 110px; }
+#bar .slider input { width: 80px; }
+#bar #rng-volume { width: 70px; }
 #bar .hint { color: color-mix(in srgb, var(--fg) 60%, transparent); font-size: 12px; }
 #bar .spacer { flex: 1; }
 button { font: inherit; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); cursor: pointer; }

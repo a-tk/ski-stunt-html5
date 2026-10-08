@@ -24,7 +24,7 @@ so it can be hosted anywhere (GitHub Pages does exactly that).
 **Playing:** press <kbd>Space</kbd> to start and stop; the mouse position controls the skier's pose (a
 square zone, half the screen's shorter side, centered on the canvas; the box is drawn on screen). <kbd>&lt;</kbd> / <kbd>&gt;</kbd> slow down /
 speed up, <kbd>↑</kbd> / <kbd>↓</kbd> zoom, <kbd>Esc</kbd> stops. The simulation runs in real time; the speed
-slider slows it down (1x to 1/8x). Terrain, skin, replay of your last run and four recorded demos are in the
+slider slows it down (1x to 1/8x). The volume slider sets the master sound level (remembered in the browser for next time). Terrain, skin, replay of your last run and four recorded demos are in the
 toolbar.
 
 ## Editors

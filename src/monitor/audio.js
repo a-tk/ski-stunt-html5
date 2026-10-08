@@ -7,7 +7,14 @@ export class Audio {
     this.vfs = vfs;
     this.ctx = null;
     this.buffers = new Map();
-    this.muted = false;
+    this.master = null;   // the GainNode every sound goes through
+    this.volume = 1;      // the slider position, 0..1
+  }
+
+  /** Sets the master volume from a slider position in 0..1 (0 is silent). Works before the context exists. */
+  setVolume(v) {
+    this.volume = Math.min(1, Math.max(0, Number(v) || 0));
+    if (this.master) this.master.gain.value = this.volume ** 2;   // squared: loudness is heard roughly logarithmically
   }
 
   /** Creates/resumes the audio context; call from a user gesture. */
@@ -16,6 +23,9 @@ export class Audio {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       this.ctx = new AC();
+      this.master = this.ctx.createGain();
+      this.master.connect(this.ctx.destination);
+      this.setVolume(this.volume);
     }
     if (this.ctx.state === 'suspended') this.ctx.resume();
   }
@@ -34,12 +44,12 @@ export class Audio {
 
   /** Plays a sound now (overlapping plays are fine). */
   play(path) {
-    if (this.muted || !this.ctx) return;
+    if (this.volume === 0 || !this.ctx) return;
     this.load(path).then((buf) => {
       if (!buf) return;
       const src = this.ctx.createBufferSource();
       src.buffer = buf;
-      src.connect(this.ctx.destination);
+      src.connect(this.master);
       src.start();
     });
   }
